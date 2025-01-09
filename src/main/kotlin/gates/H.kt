@@ -5,6 +5,7 @@ import Qubit
 import State
 import math.Complex
 import math.HALF_PROB
+import math.notMinusZero
 
 class H (override val qubits: Array<Qubit>) : Operator {
     override val name = "H"
@@ -34,11 +35,11 @@ class H (override val qubits: Array<Qubit>) : Operator {
             // α/√2 (|0⟩ + |1⟩) +  β/√2 (|0⟩ - |1⟩)
             // this way, the new amplitudes for |0⟩ and |1⟩ are respectively (α/√2 + β/√2) and (α/√2 - β/√2)
 
-            val newZeroAmplitudeReal:Double = HALF_PROB * (qubitState.zeroAmplitude.real + qubitState.oneAmplitude.real)
-            val newZeroAmplitudeImaginary:Double = HALF_PROB * (qubitState.zeroAmplitude.imaginary + qubitState.oneAmplitude.imaginary)
+            val newZeroAmplitudeReal:Double = notMinusZero( HALF_PROB * (qubitState.zeroAmplitude.real + qubitState.oneAmplitude.real))
+            val newZeroAmplitudeImaginary:Double = notMinusZero( HALF_PROB * (qubitState.zeroAmplitude.imaginary + qubitState.oneAmplitude.imaginary))
 
-            val newOneAmplitudeReal:Double = HALF_PROB * (qubitState.zeroAmplitude.real - qubitState.oneAmplitude.real)
-            val newOneAmplitudeImaginary:Double = HALF_PROB * (qubitState.zeroAmplitude.imaginary - qubitState.oneAmplitude.imaginary)
+            val newOneAmplitudeReal:Double = notMinusZero( HALF_PROB * (qubitState.zeroAmplitude.real - qubitState.oneAmplitude.real))
+            val newOneAmplitudeImaginary:Double = notMinusZero( HALF_PROB * (qubitState.zeroAmplitude.imaginary - qubitState.oneAmplitude.imaginary))
 
             qubitState.setAmplitudeOfZero(Complex(newZeroAmplitudeReal, newZeroAmplitudeImaginary))
             qubitState.setAmplitudeOfOne(Complex(newOneAmplitudeReal, newOneAmplitudeImaginary))

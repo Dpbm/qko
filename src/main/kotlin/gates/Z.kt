@@ -4,6 +4,7 @@ import Operator
 import Qubit
 import State
 import math.Complex
+import math.notMinusZero
 
 class Z (override val qubits: Array<Qubit>) : Operator {
     override val name = "Z"
@@ -21,8 +22,8 @@ class Z (override val qubits: Array<Qubit>) : Operator {
          val imaginaryOneAmplitude:Double = qubitState.oneAmplitude.imaginary;
 
          qubitState.setAmplitudeOfOne(Complex(
-             if(realOneAmplitude == 0.0) 0.0 else -1.0 * realOneAmplitude,
-             if(imaginaryOneAmplitude == 0.0) 0.0 else -1.0 * imaginaryOneAmplitude
+             notMinusZero( -1.0 * realOneAmplitude),
+             notMinusZero( -1.0 * imaginaryOneAmplitude)
          ))
 
      }
