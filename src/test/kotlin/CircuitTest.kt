@@ -1,5 +1,9 @@
+import gates.H
 import gates.X
+import math.HALF_PROB
+
 import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class CircuitTest {
 
@@ -7,56 +11,204 @@ class CircuitTest {
     fun testCircuitInitializationOneQubit(){
         val circuit:Circuit = Circuit(1)
 
-        assert(circuit.getTotalQubits() == 1)
+        assertEquals(circuit.getTotalQubits(), 1)
 
-        val qubits: Array<Qubit> = circuit.getQubits();
-        assert(qubits.size == 1)
+        val qubits: Array<Qubit> = circuit.getQubits()
+        assertEquals(qubits.size, 1)
 
         val qubitState: State = qubits[0].getState()
-        assert(qubitState.getZeroAmplitude().real == 1.0)
-        assert(qubitState.getZeroAmplitude().imaginary == 0.0)
+        assertEquals(qubitState.zeroAmplitude.real, 1.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
 
-        assert(qubitState.getOneAmplitude().real == 0.0)
-        assert(qubitState.getOneAmplitude().imaginary == 0.0)
+        assertEquals(qubitState.oneAmplitude.real, 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
     }
 
     @Test
     fun testCircuitInitializationThreeQubits(){
         val circuit:Circuit = Circuit(3)
 
-        assert(circuit.getTotalQubits() == 3)
+        assertEquals(circuit.getTotalQubits(), 3)
 
         val qubits: Array<Qubit> = circuit.getQubits();
-        assert(qubits.size == 3)
+        assertEquals(qubits.size, 3)
 
         for(qubit in qubits){
             val qubitState: State = qubit.getState()
-            assert(qubitState.getZeroAmplitude().real == 1.0)
-            assert(qubitState.getZeroAmplitude().imaginary == 0.0)
+            assertEquals(qubitState.zeroAmplitude.real, 1.0)
+            assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
 
-            assert(qubitState.getOneAmplitude().real == 0.0)
-            assert(qubitState.getOneAmplitude().imaginary == 0.0)
+            assertEquals(qubitState.oneAmplitude.real, 0.0)
+            assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
         }
-
-
     }
 
     @Test
-    fun testAddXGate(){
-        val circuit:Circuit = Circuit(1)
+    fun testCircuitInitializationOneQubitWithDifferentInitialState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits: Array<Qubit> = circuit.getQubits()
+        val qubitState: State = qubits[0].getState()
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+
+    @Test
+    fun testAddXGateZeroState(){
+        val circuit:Circuit = Circuit(1, ZERO_STATE)
 
         val qubits:Array<Qubit> = circuit.getQubits()
 
         circuit.addGate(X(qubits))
         circuit.runCircuit()
 
-        val qubit = qubits[0];
+
+        val qubit:Qubit = qubits[0]
         val qubitState: State = qubit.getState()
 
-        assert(qubitState.getZeroAmplitude().real == 0.0)
-        assert(qubitState.getZeroAmplitude().imaginary == 0.0)
+        assertEquals(qubitState.zeroAmplitude.real, 0.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
 
-        assert(qubitState.getOneAmplitude().real == 1.0)
-        assert(qubitState.getOneAmplitude().imaginary == 0.0)
+        assertEquals(qubitState.oneAmplitude.real, 1.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
     }
+
+    @Test
+    fun testAddXGateOneState(){
+        val circuit:Circuit = Circuit(1, ONE_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(X(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, 1.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddXGatePlusState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(X(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddXGateMinusState(){
+        val circuit:Circuit = Circuit(1, MINUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(X(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, -HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddHGateZeroState(){
+        val circuit:Circuit = Circuit(1)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(H(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddHGateOneState(){
+        val circuit:Circuit = Circuit(1, ONE_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(H(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, -HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddHGatePlusState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(H(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, 1.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddHGateMinusState(){
+        val circuit:Circuit = Circuit(1, MINUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(H(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, 0.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, 1.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+   // TODO: TEST H GATE WITH AN ARBITRARY STATE
 }

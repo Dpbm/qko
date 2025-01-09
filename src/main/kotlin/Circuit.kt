@@ -9,9 +9,9 @@ class Circuit{
     private val totalQubits:Int
     private val qubits: Array<Qubit>
 
-    constructor(totalQubits:Int){
+    constructor(totalQubits:Int, initialState:State=ZERO_STATE){
         this.totalQubits = totalQubits
-        this.qubits = Array(totalQubits){ Qubit(ZeroState) }
+        this.qubits = Array(totalQubits){ Qubit(initialState) }
     }
 
      fun addGate(gate:Operator){
