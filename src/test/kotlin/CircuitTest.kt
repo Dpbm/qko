@@ -1,5 +1,6 @@
 import gates.H
 import gates.X
+import gates.Z
 import math.HALF_PROB
 
 import kotlin.test.Test
@@ -211,4 +212,86 @@ class CircuitTest {
     }
 
    // TODO: TEST H GATE WITH AN ARBITRARY STATE
+    // TODO: TEST STATE (IS_ZERO, IS_ONE, IS_PLUS, IS_MINUS,etc)
+
+
+    @Test
+    fun testAddZGateZeroState(){
+        val circuit:Circuit = Circuit(1)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(Z(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, 1.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddZGateOneState(){
+        val circuit:Circuit = Circuit(1, ONE_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(Z(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, 0.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, -1.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddZGatePlusState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(Z(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, -HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    @Test
+    fun testAddZGateMinusState(){
+        val circuit:Circuit = Circuit(1, MINUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(Z(qubits))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.zeroAmplitude.imaginary, 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(qubitState.oneAmplitude.imaginary, 0.0)
+    }
+
+    // TODO: TEST Z GATE WITH AN ARBITRARY STATE
+
+
 }

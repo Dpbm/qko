@@ -14,5 +14,5 @@ class X (override val qubits: Array<Qubit>) : Operator {
 
         val qubit:Qubit = qubits[0]
         qubit.swapAmplitudes()
-    }
+     }
 }
