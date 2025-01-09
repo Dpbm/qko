@@ -1,10 +1,13 @@
 import gates.H
+import gates.RY
 import gates.X
 import gates.Z
 import math.HALF_PROB
 
 import kotlin.test.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.math.PI
+import kotlin.math.round
 
 class CircuitTest {
 
@@ -293,5 +296,82 @@ class CircuitTest {
 
     // TODO: TEST Z GATE WITH AN ARBITRARY STATE
 
+    @Test
+    fun testAddRYGateZeroState(){
+        val circuit:Circuit = Circuit(1)
 
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RY(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), 0.0)
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), 0.0)
+
+        assertEquals(round(qubitState.oneAmplitude.real), 1.0)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 0.0)
+    }
+
+    @Test
+    fun testAddRYGateOneState(){
+        val circuit:Circuit = Circuit(1, ONE_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RY(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), -1.0) // we have a phase
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), 0.0)
+
+        assertEquals(round(qubitState.oneAmplitude.real), 0.0)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 0.0)
+    }
+
+    @Test
+    fun testAddRYGatePlusState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RY(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, -HALF_PROB)
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 0.0)
+    }
+
+    @Test
+    fun testAddRYGateMinusState(){
+        val circuit:Circuit = Circuit(1, MINUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RY(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(qubitState.zeroAmplitude.real, HALF_PROB)
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), 0.0)
+
+        assertEquals(qubitState.oneAmplitude.real, HALF_PROB)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 0.0)
+    }
+
+
+    // TODO: TEST RY GATE WITH AN ARBITRARY STATE
 }
