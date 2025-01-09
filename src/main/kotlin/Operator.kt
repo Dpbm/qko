@@ -1,3 +1,6 @@
-abstract class Operator protected constructor(private val name: String) {
-    protected abstract fun apply()
+interface Operator {
+    val name:String
+    val qubits:Array<Qubit>
+
+    fun apply()
 }
