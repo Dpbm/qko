@@ -452,4 +452,84 @@ class CircuitTest {
 
 
     // TODO: TEST RX GATE WITH AN ARBITRARY STATE
+
+    @Test
+    fun testAddRZGateZeroState(){
+        val circuit:Circuit = Circuit(1)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RZ(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), 0.0)
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), -1.0)
+
+        assertEquals(round(qubitState.oneAmplitude.real), 0.0)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 0.0)
+    }
+
+    @Test
+    fun testAddRZGateOneState(){
+        val circuit:Circuit = Circuit(1, ONE_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RZ(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), 0.0)
+        assertEquals(round(qubitState.zeroAmplitude.imaginary), 0.0)
+
+        assertEquals(round(qubitState.oneAmplitude.real), 0.0)
+        assertEquals(round(qubitState.oneAmplitude.imaginary), 1.0)
+    }
+
+    @Test
+    fun testAddRZGatePlusState(){
+        val circuit:Circuit = Circuit(1, PLUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RZ(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), 0.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, -HALF_PROB)
+
+        assertEquals(round(qubitState.oneAmplitude.real), 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, HALF_PROB)
+    }
+
+    @Test
+    fun testAddRZGateMinusState(){
+        val circuit:Circuit = Circuit(1, MINUS_STATE)
+
+        val qubits:Array<Qubit> = circuit.getQubits()
+
+        circuit.addGate(RZ(qubits, PI))
+        circuit.runCircuit()
+
+        val qubit = qubits[0]
+        val qubitState: State = qubit.getState()
+
+        assertEquals(round(qubitState.zeroAmplitude.real), 0.0)
+        assertEquals(qubitState.zeroAmplitude.imaginary, -HALF_PROB)
+
+        // the value is to close to 0.0, but it's negative, so after rounding it, it becomes -0.0, that's why I'm using notMinusZero() here
+        assertEquals(notMinusZero(round(qubitState.oneAmplitude.real)), 0.0)
+        assertEquals(qubitState.oneAmplitude.imaginary, -HALF_PROB)
+    }
+
+
+    // TODO: TEST RZ GATE WITH AN ARBITRARY STATE
 }
