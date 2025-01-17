@@ -1,36 +1,18 @@
-import math.Complex
-import kotlin.math.pow
-
-class Circuit{
+class Circuit (private val totalQubits: Int){
     // the ops are added in order as they are inserted in the circuit
     // this way to apply the operations, it's just needed to follow the sequence
-    private var ops: ArrayList<Operator> = ArrayList()
+    private var ops: ArrayList<Gate> = ArrayList()
 
-    private val totalQubits:Int
-    private val qubits: Array<Qubit>
-
-    constructor(totalQubits:Int, initialState:State=ZERO_STATE){
-        this.totalQubits = totalQubits
-        this.qubits = Array(totalQubits){ Qubit(initialState) }
-    }
-
-     fun addGate(gate:Operator){
+     fun addGate(gate:Gate){
         this.ops.add(gate)
-    }
-
-    fun getQubits():Array<Qubit>{
-        return this.qubits
     }
 
     fun getTotalQubits():Int{
         return this.totalQubits
     }
 
-    // TODO: MUST BE UPDATED
-    fun runCircuit(){
-        for(op in  this.ops){
-            op.apply()
-        }
+    fun getOpsList():ArrayList<Gate>{
+        return this.ops
     }
 
 }

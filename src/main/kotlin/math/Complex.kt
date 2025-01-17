@@ -1,4 +1,3 @@
 package math
 
-class Complex public constructor(val real: Double, val imaginary:Double){
-}
+data class Complex (var real: Double, var imaginary:Double)
