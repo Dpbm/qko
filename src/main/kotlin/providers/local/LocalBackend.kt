@@ -6,7 +6,6 @@ import CircuitState
 import math.Complex
 import math.notMinusZero
 import providers.Backend
-import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 class LocalBackend : Backend{
@@ -35,7 +34,7 @@ class LocalBackend : Backend{
                 NativeOperators.RY ->print("AAA")
                 NativeOperators.RZ ->print("AAA")
                 NativeOperators.CNOT -> circuitState = this.cnot(circuitState, op.qubits, totalQubits)
-                NativeOperators.SWAP ->print("AAA")
+                NativeOperators.SWAP -> circuitState = this.swap(circuitState, op.qubits, totalQubits)
             }
         }
 
@@ -109,7 +108,6 @@ class LocalBackend : Backend{
         return newState
     }
 
-
     private fun cnot(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
         check(qubits.size == 2){ "Invalid number of Qubits for CNOT gate!" }
@@ -133,7 +131,7 @@ class LocalBackend : Backend{
             val controlHasOne:Boolean = binaryRowIndex[controlQubit] == '1'
             val targetBinaryValue:Char = binaryRowIndex[targetQubit]
 
-            var newRowIndex:Int = rowIndex;
+            var newRowIndex:Int = rowIndex
             if(controlHasOne){
                 newRowIndex = binaryRowIndex.replaceRange(targetQubit, targetQubit+1, if(targetBinaryValue == '1') "0" else "1")
                                                     .toInt(radix = 2)
@@ -153,7 +151,9 @@ class LocalBackend : Backend{
         val selectedQubit:Int = qubits.first()
         check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for Z gate!" }
 
-        for(rowIndex in 0..<(circuitState.size)){
+        val totalBitStringsCombinations:Int = circuitState.size
+
+        for(rowIndex in 0..<(totalBitStringsCombinations)){
             val binaryRowIndex:String = rowIndex.toString(radix = 2)
                 .padStart(totalQubits, '0')
             val rowValue:Amplitude = circuitState[rowIndex]
@@ -176,7 +176,9 @@ class LocalBackend : Backend{
         check(controlQubit >= 0 && controlQubit <= totalQubits-1){ "Invalid control Qubit for CZ gate!" }
         check(targetQubit >= 0 && targetQubit <= totalQubits-1){ "Invalid target Qubit for CZ gate!" }
 
-        for(rowIndex in 0..<(circuitState.size)){
+        val totalBitStringsCombinations:Int = circuitState.size
+
+        for(rowIndex in 0..<(totalBitStringsCombinations)){
             val binaryRowIndex:String = rowIndex.toString(radix = 2)
                 .padStart(totalQubits, '0')
             val rowValue:Amplitude = circuitState[rowIndex]
@@ -187,5 +189,33 @@ class LocalBackend : Backend{
         }
 
         return circuitState
+    }
+
+    private fun swap(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
+        check(qubits.size == 2){ "Invalid number of Qubits for SWAP gate!" }
+
+        val controlQubit:Int = qubits.first()
+        val targetQubit:Int = qubits.last()
+        check(controlQubit >= 0 && controlQubit <= totalQubits-1){ "Invalid control Qubit for SWAP gate!" }
+        check(targetQubit >= 0 && targetQubit <= totalQubits-1){ "Invalid target Qubit for SWAP gate!" }
+
+        val totalBitStringsCombinations:Int = circuitState.size
+
+        for(rowIndex in 0..<(totalBitStringsCombinations/2)){
+            val binaryRowIndex:String = rowIndex.toString(radix = 2)
+                .padStart(totalQubits, '0')
+            val binaryRowCounterpart:String = binaryRowIndex.replaceRange(controlQubit, controlQubit+1, binaryRowIndex[targetQubit].toString())
+                                                            .replaceRange(targetQubit, targetQubit+1, binaryRowIndex[controlQubit].toString())
+            val counterpartIndex:Int = binaryRowCounterpart.toInt(radix=2)
+
+
+            val tmpAmplitude:Amplitude = circuitState[rowIndex]
+            circuitState[rowIndex]  = circuitState[counterpartIndex]
+            circuitState[counterpartIndex] = tmpAmplitude
+        }
+
+        return circuitState
+
     }
 }
