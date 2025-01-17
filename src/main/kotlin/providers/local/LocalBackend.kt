@@ -30,7 +30,7 @@ class LocalBackend : Backend{
                 NativeOperators.X -> circuitState = this.x(circuitState, op.qubits, totalQubits)
                 NativeOperators.H -> print("AAA")
                 NativeOperators.Z -> circuitState = this.z(circuitState, op.qubits, totalQubits)
-                NativeOperators.CZ -> print("AAA")
+                NativeOperators.CZ -> circuitState = this.cz(circuitState, op.qubits, totalQubits)
                 NativeOperators.RX ->print("AAA")
                 NativeOperators.RY ->print("AAA")
                 NativeOperators.RZ ->print("AAA")
@@ -165,6 +165,27 @@ class LocalBackend : Backend{
         }
 
         return circuitState
+    }
 
+    private fun cz(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
+        check(qubits.size == 2){ "Invalid number of Qubits for CZ gate!" }
+
+        val controlQubit:Int = qubits.first()
+        val targetQubit:Int = qubits.last()
+        check(controlQubit >= 0 && controlQubit <= totalQubits-1){ "Invalid control Qubit for CZ gate!" }
+        check(targetQubit >= 0 && targetQubit <= totalQubits-1){ "Invalid target Qubit for CZ gate!" }
+
+        for(rowIndex in 0..<(circuitState.size)){
+            val binaryRowIndex:String = rowIndex.toString(radix = 2)
+                .padStart(totalQubits, '0')
+            val rowValue:Amplitude = circuitState[rowIndex]
+
+            val factor:Int = if(binaryRowIndex[targetQubit] == '1' && binaryRowIndex[controlQubit] == '1') -1 else 1
+            circuitState[rowIndex].real = notMinusZero(factor*rowValue.real)
+            circuitState[rowIndex].imaginary = notMinusZero(factor*rowValue.imaginary)
+        }
+
+        return circuitState
     }
 }
