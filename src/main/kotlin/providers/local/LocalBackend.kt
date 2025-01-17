@@ -5,6 +5,7 @@ import Circuit
 import CircuitState
 import math.Complex
 import providers.Backend
+import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 class LocalBackend : Backend{
@@ -32,7 +33,7 @@ class LocalBackend : Backend{
                 NativeOperators.RX ->print("AAA")
                 NativeOperators.RY ->print("AAA")
                 NativeOperators.RZ ->print("AAA")
-                NativeOperators.CNOT ->print("AAA")
+                NativeOperators.CNOT -> circuitState = this.cnot(circuitState, op.qubits, totalQubits)
                 NativeOperators.SWAP ->print("AAA")
             }
         }
@@ -106,4 +107,41 @@ class LocalBackend : Backend{
         return newState
     }
 
+
+    private fun cnot(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
+
+        check(qubits.size == 2){ "Invalid number of Qubits for CNOT gate!" }
+
+        val controlQubit:Int = qubits.first()
+        val targetQubit:Int = qubits.last()
+        check(controlQubit >= 0 && controlQubit <= totalQubits-1){ "Invalid control Qubit for CNOT gate!" }
+        check(targetQubit >= 0 && targetQubit <= totalQubits-1){ "Invalid target Qubit for CNOT gate!" }
+
+
+        val totalBitStringsCombinations:Int = circuitState.size
+        val newState:CircuitState = Array(totalBitStringsCombinations){ Complex(0.0,0.0) }
+
+
+        for(rowIndex in 0..<(totalBitStringsCombinations)){
+            val binaryRowIndex:String = rowIndex.toString(radix = 2)
+                                                .padStart(totalQubits, '0')
+            val rowValue:Amplitude = circuitState[rowIndex]
+
+            // keep in mind that the qubit 0 is the leftmost
+            val controlHasOne:Boolean = binaryRowIndex[controlQubit] == '1'
+            val targetBinaryValue:Char = binaryRowIndex[targetQubit]
+
+            var newRowIndex:Int = rowIndex;
+            if(controlHasOne){
+                newRowIndex = binaryRowIndex.replaceRange(targetQubit, targetQubit+1, if(targetBinaryValue == '1') "0" else "1")
+                                                    .toInt(radix = 2)
+            }
+
+            newState[newRowIndex].real = rowValue.real
+            newState[newRowIndex].imaginary = rowValue.imaginary
+        }
+
+        return newState
+    }
 }
