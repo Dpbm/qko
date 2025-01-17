@@ -4,6 +4,7 @@ import Amplitude
 import Circuit
 import CircuitState
 import math.Complex
+import math.notMinusZero
 import providers.Backend
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -28,8 +29,8 @@ class LocalBackend : Backend{
             when(parsedOp){
                 NativeOperators.X -> circuitState = this.x(circuitState, op.qubits, totalQubits)
                 NativeOperators.H -> print("AAA")
-                NativeOperators.Z -> print("AAA")
-                NativeOperators.CZ ->print("AAA")
+                NativeOperators.Z -> circuitState = this.z(circuitState, op.qubits, totalQubits)
+                NativeOperators.CZ -> print("AAA")
                 NativeOperators.RX ->print("AAA")
                 NativeOperators.RY ->print("AAA")
                 NativeOperators.RZ ->print("AAA")
@@ -42,6 +43,7 @@ class LocalBackend : Backend{
     }
 
     private fun x(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
         check(qubits.size == 1){ "Invalid number of Qubits for X gate!" }
 
         val selectedQubit:Int = qubits.first()
@@ -110,7 +112,6 @@ class LocalBackend : Backend{
 
     private fun cnot(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
-
         check(qubits.size == 2){ "Invalid number of Qubits for CNOT gate!" }
 
         val controlQubit:Int = qubits.first()
@@ -143,5 +144,27 @@ class LocalBackend : Backend{
         }
 
         return newState
+    }
+
+    private fun z(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
+        check(qubits.size == 1){ "Invalid number of Qubits for Z gate!" }
+
+        val selectedQubit:Int = qubits.first()
+        check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for Z gate!" }
+
+        for(rowIndex in 0..<(circuitState.size)){
+            val binaryRowIndex:String = rowIndex.toString(radix = 2)
+                .padStart(totalQubits, '0')
+            val rowValue:Amplitude = circuitState[rowIndex]
+
+            val factor:Int = if(binaryRowIndex[selectedQubit] == '1') -1 else 1
+            circuitState[rowIndex].real = notMinusZero(factor*rowValue.real)
+            circuitState[rowIndex].imaginary = notMinusZero(factor*rowValue.imaginary)
+
+        }
+
+        return circuitState
+
     }
 }

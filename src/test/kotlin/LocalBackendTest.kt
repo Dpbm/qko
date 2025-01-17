@@ -36,6 +36,18 @@ class LocalBackendTest {
     }
 
     @Test()
+    fun testLocalBackendXGateInvalidNumberOfCircuitQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(0)
+        circuit.addGate(Gate("X", arrayListOf(1)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Your Circuit must have at least 1 qubit!", exception.message)
+    }
+
+    @Test()
     fun testLocalBackendXGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
@@ -374,7 +386,73 @@ class LocalBackendTest {
 
     }
 
+    @Test()
+    fun testLocalBackendZGateInvalidNumberOfQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("Z", arrayListOf(1,2)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid number of Qubits for Z gate!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendZGateInvalidNumberOfCircuitQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(0)
+        circuit.addGate(Gate("Z", arrayListOf(1)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Your Circuit must have at least 1 qubit!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendZGateInvalidSelectedQubit(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("Z", arrayListOf(1)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid selected Qubit for Z gate!", exception.message)
+    }
+
+    @Test
+    fun testLocalBackendZGateZeroState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("Z", arrayListOf(0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result.first().real, 1.0)
+        assertEquals(result.first().imaginary, 0.0)
+
+        assertEquals(result.last().real, 0.0)
+        assertEquals(result.last().imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendZGateOneState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(Gate("Z", arrayListOf(0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result.first().real, 0.0)
+        assertEquals(result.first().imaginary, 0.0)
+
+        assertEquals(result.last().real, -1.0)
+        assertEquals(result.last().imaginary, 0.0)
+    }
+
 
     // TODO: TEST X FOR DIFFERENT STATES
     // TODO: TEST CNOT FOR DIFFERENT STATES
+    // TODO: TEST Z FOR DIFFERENT STATES
 }
