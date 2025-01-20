@@ -4,6 +4,7 @@ import Amplitude
 import Circuit
 import CircuitState
 import math.Complex
+import math.HALF_PROB
 import math.notMinusZero
 import providers.Backend
 import kotlin.math.pow
@@ -27,7 +28,7 @@ class LocalBackend : Backend{
 
             when(parsedOp){
                 NativeOperators.X -> circuitState = this.x(circuitState, op.qubits, totalQubits)
-                NativeOperators.H -> print("AAA")
+                NativeOperators.H -> circuitState = this.h(circuitState, op.qubits, totalQubits)
                 NativeOperators.Z -> circuitState = this.z(circuitState, op.qubits, totalQubits)
                 NativeOperators.CZ -> circuitState = this.cz(circuitState, op.qubits, totalQubits)
                 NativeOperators.RX ->print("AAA")
@@ -217,5 +218,110 @@ class LocalBackend : Backend{
 
         return circuitState
 
+    }
+
+    private fun h(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
+        check(qubits.size == 1){ "Invalid number of Qubits for H gate!" }
+
+        val selectedQubit:Int = qubits.first()
+        check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for H gate!" }
+
+        val totalBitStringsCombinations:Int = circuitState.size
+
+        // I⊗H⊗I = 010
+        // how much a value is distant from another in the final matrix after applied a kron op
+        // 1/√2 * [ 1 0 1  0 ]     this matrix is for the obs H⊗I (10) so the increment it has is 2
+        //        [ 0 1 0  1 ]     it can be seen by analysing the positions with +-1
+        //        [ 1 0 -1 0 ]     in the first row, the first value 1 is at 00 and the second is at 10, so a difference of 2.
+        //        [ 0 1 0 -1 ]     it also works for columns
+        val increment:Int = "".padStart(totalQubits,'0')
+            .replaceRange(selectedQubit,selectedQubit+1, "1")
+            .toInt(radix=2)
+
+        // the first value of a row (first +-1)
+        // by default, the first value 1 is in the top right corner
+        var baseRowIndexValue = 0
+
+
+        // for some matrices, we can have inner squares spread throughout it (like the matrix above)
+        // so we keep track of how much of these there are
+        val totalInnerSquareSide = increment-1
+        // and how much weren't mapped yet
+        var innerSquareRemainingRows = totalInnerSquareSide
+        // we also need to know how many values it's displaced from the left border
+        var squareShift = 0
+
+
+        // check if we reached the end of main corner matrix (useful when adding a |-⟩ state)
+        // [ 1 0 1  0 ]
+        // [ 0 1 0  1 ]
+        // [ 1 0 -1 0 ]     In this case the last line ends with this -1 so the main corner matrix is
+        // [ 0 1 0 -1 ]     1 (i=0,j=0) 1(i=0,j=2) 1(i=2,j=0) -1(i=2,j=2)
+        var finishedLastLine = false
+
+        val newState:CircuitState = Array(totalBitStringsCombinations){ Complex(0.0,0.0) }
+
+
+        for(rowIndex in 0..<(totalBitStringsCombinations)){
+            var updatedSquare = false
+            val rowValue:Amplitude = Complex(0.0, 0.0)
+
+            for(colIndex in 0..<(totalBitStringsCombinations)){
+                var value = 0.0
+
+                if((rowIndex == baseRowIndexValue &&
+                            (colIndex == baseRowIndexValue || colIndex == baseRowIndexValue+increment)) ||
+                            (rowIndex == baseRowIndexValue+increment && colIndex == baseRowIndexValue)
+                    ){
+                    value = HALF_PROB
+                }else if(rowIndex == baseRowIndexValue+increment &&
+                    colIndex == baseRowIndexValue+increment
+                    ){
+
+                    value = -HALF_PROB
+                    innerSquareRemainingRows = totalInnerSquareSide
+                    squareShift = 0
+                    finishedLastLine = true
+
+                }else if(
+                            (innerSquareRemainingRows > 0 &&
+                    rowIndex != baseRowIndexValue &&
+                    rowIndex != baseRowIndexValue+increment &&
+                    (rowIndex == baseRowIndexValue+squareShift || rowIndex == baseRowIndexValue+squareShift+increment)) &&
+                    (colIndex == baseRowIndexValue+squareShift || colIndex == baseRowIndexValue+squareShift+increment)
+                    ){
+                    value = HALF_PROB
+
+                    if(rowIndex > baseRowIndexValue+increment && colIndex == baseRowIndexValue+squareShift+increment){
+                        value = -HALF_PROB
+                    }
+                    updatedSquare = true
+                }
+
+                val rowState:Amplitude = circuitState[colIndex]
+                rowValue.real += rowState.real * value
+                rowValue.imaginary += rowState.imaginary * value
+
+            }
+
+            newState[rowIndex] = rowValue
+
+            squareShift++
+            if(updatedSquare){
+                innerSquareRemainingRows--
+            }
+
+            if(finishedLastLine && innerSquareRemainingRows <= 0){
+                baseRowIndexValue += increment + totalInnerSquareSide + 1
+                innerSquareRemainingRows = totalInnerSquareSide
+                squareShift = 0
+                finishedLastLine = false
+            }
+        }
+
+
+
+        return newState
     }
 }

@@ -1,8 +1,10 @@
+import math.HALF_PROB
 import kotlin.test.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import providers.Outcome
 import providers.local.LocalBackend
+import kotlin.math.round
 
 class LocalBackendTest {
     @Test
@@ -800,6 +802,360 @@ class LocalBackendTest {
         }
     }
 
+    @Test()
+    fun testLocalBackendHGateInvalidNumberOfQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(1,2)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid number of Qubits for H gate!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendHGateInvalidNumberOfCircuitQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(0)
+        circuit.addGate(Gate("H", arrayListOf(1)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Your Circuit must have at least 1 qubit!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendHGateInvalidSelectedQubit(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("Z", arrayListOf(1)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid selected Qubit for Z gate!", exception.message)
+    }
+
+    @Test
+    fun testLocalBackendHGateZeroState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result.first().real, HALF_PROB)
+        assertEquals(result.first().imaginary, 0.0)
+
+        assertEquals(result.last().real, HALF_PROB)
+        assertEquals(result.last().imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendHGateOneState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result.first().real, HALF_PROB)
+        assertEquals(result.first().imaginary, 0.0)
+
+        assertEquals(result.last().real, -HALF_PROB)
+        assertEquals(result.last().imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendHGate00State(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        val result:Outcome = backend.execute(circuit)
+
+        for (i in 0..<4){
+            assertEquals(round(result[i].real*10)/10, 0.5)
+            assertEquals(result[i].imaginary, 0.0)
+        }
+    }
+
+    @Test
+    fun testLocalBackendHGate01State(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(round(result[0].real*10)/10, 0.5)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(round(result[1].real*10)/10, -0.5)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(round(result[2].real*10)/10, 0.5)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(round(result[3].real*10)/10, -0.5)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendHGate10State(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(round(result[0].real*10)/10, 0.5)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(round(result[1].real*10)/10, 0.5)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(round(result[2].real*10)/10, -0.5)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(round(result[3].real*10)/10, -0.5)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendHGate11State(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(round(result[0].real*10)/10, 0.5)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(round(result[1].real*10)/10, -0.5)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(round(result[2].real*10)/10, -0.5)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(round(result[3].real*10)/10, 0.5)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendHGateHII(){
+        val backend = LocalBackend()
+        val circuit = Circuit(3)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[4].real, HALF_PROB)
+        assertEquals(result[4].imaginary, 0.0)
+
+        for(i in 0..<8){
+            if(i == 0 || i == 4){
+                continue
+            }
+
+            assertEquals(result[i].real, 0.0)
+            assertEquals(result[i].imaginary, 0.0)
+        }
+    }
+
+    @Test
+    fun testLocalBackendHGateIHI(){
+        val backend = LocalBackend()
+        val circuit = Circuit(3)
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[2].real, HALF_PROB)
+        assertEquals(result[2].imaginary, 0.0)
+
+        for(i in 0..<8){
+            if(i == 0 || i == 2){
+                continue
+            }
+
+            assertEquals(result[i].real, 0.0)
+            assertEquals(result[i].imaginary, 0.0)
+        }
+    }
+
+    @Test
+    fun testLocalBackendHGateIIH(){
+        val backend = LocalBackend()
+        val circuit = Circuit(3)
+        circuit.addGate(Gate("H", arrayListOf(2)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, HALF_PROB)
+        assertEquals(result[1].imaginary, 0.0)
+
+        for(i in 0..<8){
+            if(i == 0 || i == 1){
+                continue
+            }
+
+            assertEquals(result[i].real, 0.0)
+            assertEquals(result[i].imaginary, 0.0)
+        }
+    }
+
+    @Test
+    fun testLocalBackendBellStatePhiPlus(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, 0.0)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, 0.0)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, HALF_PROB)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendBellStatePhiMinus(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("Z", arrayListOf(0)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, 0.0)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, 0.0)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, -HALF_PROB)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendBellStatePsiPlus(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, 0.0)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, HALF_PROB)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, HALF_PROB)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, 0.0)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendBellStatePsiMinus(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(Gate("Z", arrayListOf(0)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, 0.0)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, HALF_PROB)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, -HALF_PROB)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, 0.0)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendBellStatePsiMinus2(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(Gate("Z", arrayListOf(0)))
+        circuit.addGate(Gate("Z", arrayListOf(1)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        val result:Outcome = backend.execute(circuit)
+
+        // if you do this circuit using a little endian pattern, the phase is going to be inserted on 10
+        // however, once our first qubit is the left-most, this will be the reverse
+
+        assertEquals(result[0].real, 0.0)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, -HALF_PROB)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, HALF_PROB)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, 0.0)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendGHZState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(3)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(Gate("CNOT", arrayListOf(1,2)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[7].real, HALF_PROB)
+        assertEquals(result[7].imaginary, 0.0)
+
+        for(i in 0..<8){
+            if(i == 0 || i == 7){
+                continue
+            }
+
+            assertEquals(result[i].real, 0.0)
+            assertEquals(result[i].imaginary, 0.0)
+        }
+    }
 
 
     // TODO: TEST X FOR DIFFERENT STATES
