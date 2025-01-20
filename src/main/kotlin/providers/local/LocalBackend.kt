@@ -270,38 +270,58 @@ class LocalBackend : Backend{
             for(colIndex in 0..<(totalBitStringsCombinations)){
                 var value = 0.0
 
-                if((rowIndex == baseRowIndexValue &&
-                            (colIndex == baseRowIndexValue || colIndex == baseRowIndexValue+increment)) ||
-                            (rowIndex == baseRowIndexValue+increment && colIndex == baseRowIndexValue)
-                    ){
-                    value = HALF_PROB
-                }else if(rowIndex == baseRowIndexValue+increment &&
-                    colIndex == baseRowIndexValue+increment
-                    ){
+                val isMainSquareTopRow = rowIndex == baseRowIndexValue
+                val isMainSquareBottomRow = rowIndex == baseRowIndexValue+increment
 
+                val isAtTheTopLeftCorner = isMainSquareTopRow && colIndex == baseRowIndexValue
+                val isAtTheTopRightCorner = isMainSquareTopRow && colIndex == baseRowIndexValue+increment
+                val isAtTheBottomLeftCorner = isMainSquareBottomRow && colIndex == baseRowIndexValue
+                val isAtTheBottomRightCorner = isMainSquareBottomRow && colIndex == baseRowIndexValue+increment
+
+                val isAnInnerSquare = innerSquareRemainingRows > 0 &&
+                       !isMainSquareTopRow &&
+                        !isMainSquareBottomRow
+
+                val isAtInnerSquareTopLeftCorner = rowIndex == baseRowIndexValue+squareShift &&
+                        colIndex == baseRowIndexValue+squareShift
+                val isAtInnerSquareTopRightCorner = rowIndex == baseRowIndexValue+squareShift &&
+                        colIndex == baseRowIndexValue+squareShift+increment
+                val isAtInnerSquareBottomLeftCorner = rowIndex == baseRowIndexValue+squareShift+increment &&
+                        colIndex == baseRowIndexValue+squareShift
+                val isAtInnerSquareBottomRightCorner = rowIndex == baseRowIndexValue+squareShift+increment &&
+                        colIndex == baseRowIndexValue+squareShift+increment
+
+                if(isAtTheTopLeftCorner || isAtTheTopRightCorner || isAtTheBottomLeftCorner){
+                    value = HALF_PROB
+                }else if(isAtTheBottomRightCorner){
                     value = -HALF_PROB
-                    innerSquareRemainingRows = totalInnerSquareSide
-                    squareShift = 0
                     finishedLastLine = true
 
-                }else if(
-                            (innerSquareRemainingRows > 0 &&
-                    rowIndex != baseRowIndexValue &&
-                    rowIndex != baseRowIndexValue+increment &&
-                    (rowIndex == baseRowIndexValue+squareShift || rowIndex == baseRowIndexValue+squareShift+increment)) &&
-                    (colIndex == baseRowIndexValue+squareShift || colIndex == baseRowIndexValue+squareShift+increment)
-                    ){
-                    value = HALF_PROB
+                    // if we finished the main corner matrix, we need to restart the inner matrix
+                    // once the other part of it is placed just below the main one
+                    innerSquareRemainingRows = totalInnerSquareSide
+                    squareShift = 0
 
-                    if(rowIndex > baseRowIndexValue+increment && colIndex == baseRowIndexValue+squareShift+increment){
-                        value = -HALF_PROB
-                    }
+                    // we can't simply use `continue` here, because the next check for the finishedLastLine just checks
+                    // if the whole matrix is completed, not if the only main corner matrix is finished. So if using
+                    // `continue`, or any other flow changing command, we wouldn't be able to get the remaining part
+                    // of the inner squares.
+
+                } else if(isAnInnerSquare && (isAtInnerSquareTopLeftCorner ||
+                                    isAtInnerSquareTopRightCorner ||
+                                    isAtInnerSquareBottomLeftCorner)){
+                    value = HALF_PROB
+                    updatedSquare = true
+                } else if(isAnInnerSquare && isAtInnerSquareBottomRightCorner){
+                    value = -HALF_PROB
                     updatedSquare = true
                 }
+
 
                 val rowState:Amplitude = circuitState[colIndex]
                 rowValue.real += rowState.real * value
                 rowValue.imaginary += rowState.imaginary * value
+
 
             }
 
@@ -313,15 +333,19 @@ class LocalBackend : Backend{
             }
 
             if(finishedLastLine && innerSquareRemainingRows <= 0){
+                // once we've finished a whole square in a corner, we need to follow to the next one
+                // to do that, it required to update the base value
+                // the new value is the sum of the inner square side which took a big portion of our matrix,
+                // the increment, once it says the distance between a corner to the another one,
+                // and 1, to ensure that we have the next index
                 baseRowIndexValue += increment + totalInnerSquareSide + 1
+
+                // reset everything for the new matrix
                 innerSquareRemainingRows = totalInnerSquareSide
                 squareShift = 0
                 finishedLastLine = false
             }
         }
-
-
-
         return newState
     }
 }
