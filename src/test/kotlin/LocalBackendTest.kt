@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import providers.Outcome
 import providers.local.LocalBackend
+import kotlin.math.PI
 import kotlin.math.round
 
 class LocalBackendTest {
@@ -1157,10 +1158,133 @@ class LocalBackendTest {
         }
     }
 
+    @Test
+    fun testLocalBackendHCnotReverseSimpleSuperposition(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(Gate("CNOT", arrayListOf(1,0)))
+        val result:Outcome = backend.execute(circuit)
 
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, 0.0)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, HALF_PROB)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, 0.0)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test
+    fun testLocalBackendReverseBellState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(Gate("CNOT", arrayListOf(1,0)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(result[0].real, HALF_PROB)
+        assertEquals(result[0].imaginary, 0.0)
+
+        assertEquals(result[1].real, 0.0)
+        assertEquals(result[1].imaginary, 0.0)
+
+        assertEquals(result[2].real, 0.0)
+        assertEquals(result[2].imaginary, 0.0)
+
+        assertEquals(result[3].real, HALF_PROB)
+        assertEquals(result[3].imaginary, 0.0)
+    }
+
+    @Test()
+    fun testLocalBackendRXGateInvalidNumberOfParams(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("RX", arrayListOf(1,2)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid number of Params for RX gate!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendRXGateInvalidNumberOfQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(2)
+        circuit.addGate(Gate("RX", arrayListOf(1,2), arrayListOf(0.0)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid number of Qubits for RX gate!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendRXGateInvalidNumberOfCircuitQubits(){
+        val backend = LocalBackend()
+        val circuit = Circuit(0)
+        circuit.addGate(Gate("RX", arrayListOf(1), arrayListOf(0.0)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Your Circuit must have at least 1 qubit!", exception.message)
+    }
+
+    @Test()
+    fun testLocalBackendRXGateInvalidSelectedQubit(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("RX", arrayListOf(1), arrayListOf(0.0)))
+
+        val exception = assertThrows(IllegalStateException::class.java){
+            backend.execute(circuit)
+        }
+        assertEquals("Invalid selected Qubit for RX gate!", exception.message)
+    }
+
+    @Test
+    fun testLocalBackendRXGateZeroState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("RX", arrayListOf(0), arrayListOf(PI)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(round(result.first().real), 0.0)
+        assertEquals(result.first().imaginary, 0.0)
+
+        assertEquals(round(result.last().real), 0.0)
+        assertEquals(result.last().imaginary, -1.0)
+    }
+
+    @Test
+    fun testLocalBackendRXGateOneState(){
+        val backend = LocalBackend()
+        val circuit = Circuit(1)
+        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(Gate("RX", arrayListOf(0), arrayListOf(PI)))
+        val result:Outcome = backend.execute(circuit)
+
+        assertEquals(round(result.first().real), 0.0)
+        assertEquals(result.first().imaginary, -1.0)
+
+        assertEquals(round(result.last().real), 0.0)
+        assertEquals(result.last().imaginary, 0.0)
+    }
+
+    // TODO: TEST PHASEKICKBACK
     // TODO: TEST X FOR DIFFERENT STATES
     // TODO: TEST CNOT FOR DIFFERENT STATES
     // TODO: TEST Z FOR DIFFERENT STATES
     // TODO: TEST CZ FOR DIFFERENT STATES
     // TODO: TEST SWAP FOR DIFFERENT STATES
+    // TODO: TEST RX FOR DIFFERENT STATES
+    // TODO: TEST RY FOR DIFFERENT STATES
+    // TODO: TEST RZ FOR DIFFERENT STATES
+    // TODO: TEST CANCEL GATES (H, RX, RY, etc.)
 }

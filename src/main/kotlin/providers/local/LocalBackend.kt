@@ -7,7 +7,9 @@ import math.Complex
 import math.HALF_PROB
 import math.notMinusZero
 import providers.Backend
+import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.sin
 
 class LocalBackend : Backend{
 
@@ -31,7 +33,7 @@ class LocalBackend : Backend{
                 NativeOperators.H -> circuitState = this.h(circuitState, op.qubits, totalQubits)
                 NativeOperators.Z -> circuitState = this.z(circuitState, op.qubits, totalQubits)
                 NativeOperators.CZ -> circuitState = this.cz(circuitState, op.qubits, totalQubits)
-                NativeOperators.RX ->print("AAA")
+                NativeOperators.RX -> circuitState = this.rx(circuitState, op.qubits, totalQubits, op.params)
                 NativeOperators.RY ->print("AAA")
                 NativeOperators.RZ ->print("AAA")
                 NativeOperators.CNOT -> circuitState = this.cnot(circuitState, op.qubits, totalQubits)
@@ -220,14 +222,24 @@ class LocalBackend : Backend{
 
     }
 
-    private fun h(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+    private fun applySuperpositionGate(
+        circuitState:CircuitState,
+        qubits:ArrayList<Int>,
+        totalQubits:Int,
+        topLeftValue:Complex,
+        topRightValue:Complex,
+        bottomLeftValue:Complex,
+        bottomRightValue:Complex,
+        gateName:String
+        ) : CircuitState{
         check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
-        check(qubits.size == 1){ "Invalid number of Qubits for H gate!" }
+        check(qubits.size == 1){ "Invalid number of Qubits for ${gateName} gate!" }
 
         val selectedQubit:Int = qubits.first()
-        check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for H gate!" }
+        check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for ${gateName} gate!" }
 
         val totalBitStringsCombinations:Int = circuitState.size
+
 
         // I⊗H⊗I = 010
         // how much a value is distant from another in the final matrix after applied a kron op
@@ -242,7 +254,6 @@ class LocalBackend : Backend{
         // the first value of a row (first +-1)
         // by default, the first value 1 is in the top right corner
         var baseRowIndexValue = 0
-
 
         // for some matrices, we can have inner squares spread throughout it (like the matrix above)
         // so we keep track of how much of these there are
@@ -268,7 +279,7 @@ class LocalBackend : Backend{
             val rowValue:Amplitude = Complex(0.0, 0.0)
 
             for(colIndex in 0..<(totalBitStringsCombinations)){
-                var value = 0.0
+                var value:Complex = Complex(0.0,0.0)
 
                 val isMainSquareTopRow = rowIndex == baseRowIndexValue
                 val isMainSquareBottomRow = rowIndex == baseRowIndexValue+increment
@@ -291,10 +302,15 @@ class LocalBackend : Backend{
                 val isAtInnerSquareBottomRightCorner = rowIndex == baseRowIndexValue+squareShift+increment &&
                         colIndex == baseRowIndexValue+squareShift+increment
 
-                if(isAtTheTopLeftCorner || isAtTheTopRightCorner || isAtTheBottomLeftCorner){
-                    value = HALF_PROB
+                if(isAtTheTopLeftCorner) {
+                    value = topLeftValue
+                }else if(isAtTheTopRightCorner){
+                    value = topRightValue
+                }
+                else if(isAtTheBottomLeftCorner){
+                    value = bottomLeftValue
                 }else if(isAtTheBottomRightCorner){
-                    value = -HALF_PROB
+                    value = bottomRightValue
                     finishedLastLine = true
 
                     // if we finished the main corner matrix, we need to restart the inner matrix
@@ -307,22 +323,26 @@ class LocalBackend : Backend{
                     // `continue`, or any other flow changing command, we wouldn't be able to get the remaining part
                     // of the inner squares.
 
-                } else if(isAnInnerSquare && (isAtInnerSquareTopLeftCorner ||
-                                    isAtInnerSquareTopRightCorner ||
-                                    isAtInnerSquareBottomLeftCorner)){
-                    value = HALF_PROB
+                } else if(isAnInnerSquare && isAtInnerSquareTopLeftCorner) {
+                    value = topLeftValue
                     updatedSquare = true
+                }else if(isAnInnerSquare && isAtInnerSquareTopRightCorner){
+                    value = topRightValue
+                    updatedSquare = true
+                }
+                else if(isAnInnerSquare && isAtInnerSquareBottomLeftCorner){
+                    value = bottomLeftValue
+                    updatedSquare = true
+
                 } else if(isAnInnerSquare && isAtInnerSquareBottomRightCorner){
-                    value = -HALF_PROB
+                    value = bottomRightValue
                     updatedSquare = true
                 }
 
 
                 val rowState:Amplitude = circuitState[colIndex]
-                rowValue.real += rowState.real * value
-                rowValue.imaginary += rowState.imaginary * value
-
-
+                rowValue.real += notMinusZero(rowState.real * value.real + (-1 * rowState.imaginary * value.imaginary))
+                rowValue.imaginary += notMinusZero(rowState.imaginary * value.real + rowState.real * value.imaginary)
             }
 
             newState[rowIndex] = rowValue
@@ -347,5 +367,35 @@ class LocalBackend : Backend{
             }
         }
         return newState
+    }
+
+    private fun h(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
+        return this.applySuperpositionGate(
+            circuitState,
+            qubits,
+            totalQubits,
+            Complex(HALF_PROB, 0.0),
+            Complex(HALF_PROB, 0.0),
+            Complex(HALF_PROB, 0.0),
+            Complex(-HALF_PROB, 0.0),
+            "H")
+    }
+
+    private fun rx(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
+        check(params.size == 1){ "Invalid number of Params for RX gate!" }
+
+        val theta:Double = params.first()
+        val cosThetaOverTwo:Double = cos(theta/2)
+        val minusSinThetaOverTwo:Double = -1 * sin(theta/2)
+
+        return this.applySuperpositionGate(
+            circuitState,
+            qubits,
+            totalQubits,
+            Complex(cosThetaOverTwo, 0.0),
+            Complex(0.0, minusSinThetaOverTwo),
+            Complex(0.0, minusSinThetaOverTwo),
+            Complex(cosThetaOverTwo, 0.0),
+            "RX")
     }
 }
