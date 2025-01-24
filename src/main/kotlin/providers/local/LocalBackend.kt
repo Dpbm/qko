@@ -35,7 +35,7 @@ class LocalBackend : Backend{
                 NativeOperators.CZ -> circuitState = this.cz(circuitState, op.qubits, totalQubits)
                 NativeOperators.RX -> circuitState = this.rx(circuitState, op.qubits, totalQubits, op.params)
                 NativeOperators.RY -> circuitState = this.ry(circuitState, op.qubits, totalQubits, op.params)
-                NativeOperators.RZ ->print("AAA")
+                NativeOperators.RZ -> circuitState = this.rz(circuitState, op.qubits, totalQubits, op.params)
                 NativeOperators.CNOT -> circuitState = this.cnot(circuitState, op.qubits, totalQubits)
                 NativeOperators.SWAP -> circuitState = this.swap(circuitState, op.qubits, totalQubits)
             }
@@ -388,6 +388,8 @@ class LocalBackend : Backend{
         val cosThetaOverTwo:Double = cos(theta/2)
         val minusSinThetaOverTwo:Double = -1 * sin(theta/2)
 
+        // TODO: CHECK WHEN IT MAY RAISE A IDENTITY MATRIX
+
         return this.applySuperpositionGate(
             circuitState,
             qubits,
@@ -407,6 +409,8 @@ class LocalBackend : Backend{
         val sinThetaOverTwo:Double = sin(theta/2)
         val minusSinThetaOverTwo:Double = -1*sinThetaOverTwo
 
+        // TODO: CHECK WHEN IT MAY RAISE A IDENTITY MATRIX
+
         return this.applySuperpositionGate(
             circuitState,
             qubits,
@@ -416,5 +420,30 @@ class LocalBackend : Backend{
             Complex(sinThetaOverTwo, 0.0),
             Complex(cosThetaOverTwo, 0.0),
             "RY")
+    }
+
+    private fun rz(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
+        check(params.size == 1){ "Invalid number of Params for RZ gate!" }
+
+        val lambda:Double = params.first()
+
+        if(lambda == 0.0){
+            // if lambda is zero, the whole matrix will be the same as Identity, once iλ/2=0 so e^iλ/2=1
+            return circuitState
+        }
+
+        val xTopLeft:Double = -1 * (lambda/2)
+        val xBottomRigth:Double = lambda/2
+
+
+        return this.applySuperpositionGate(
+            circuitState,
+            qubits,
+            totalQubits,
+            Complex(notMinusZero(cos(xTopLeft)), notMinusZero(sin(xTopLeft))),
+            Complex(0.0, 0.0),
+            Complex(0.0, 0.0),
+            Complex(notMinusZero(cos(xBottomRigth)), notMinusZero(sin(xBottomRigth))),
+            "RZ")
     }
 }
