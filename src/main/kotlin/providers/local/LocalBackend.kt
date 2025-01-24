@@ -34,7 +34,7 @@ class LocalBackend : Backend{
                 NativeOperators.Z -> circuitState = this.z(circuitState, op.qubits, totalQubits)
                 NativeOperators.CZ -> circuitState = this.cz(circuitState, op.qubits, totalQubits)
                 NativeOperators.RX -> circuitState = this.rx(circuitState, op.qubits, totalQubits, op.params)
-                NativeOperators.RY ->print("AAA")
+                NativeOperators.RY -> circuitState = this.ry(circuitState, op.qubits, totalQubits, op.params)
                 NativeOperators.RZ ->print("AAA")
                 NativeOperators.CNOT -> circuitState = this.cnot(circuitState, op.qubits, totalQubits)
                 NativeOperators.SWAP -> circuitState = this.swap(circuitState, op.qubits, totalQubits)
@@ -397,5 +397,24 @@ class LocalBackend : Backend{
             Complex(0.0, minusSinThetaOverTwo),
             Complex(cosThetaOverTwo, 0.0),
             "RX")
+    }
+
+    private fun ry(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
+        check(params.size == 1){ "Invalid number of Params for RY gate!" }
+
+        val theta:Double = params.first()
+        val cosThetaOverTwo:Double = cos(theta/2)
+        val sinThetaOverTwo:Double = sin(theta/2)
+        val minusSinThetaOverTwo:Double = -1*sinThetaOverTwo
+
+        return this.applySuperpositionGate(
+            circuitState,
+            qubits,
+            totalQubits,
+            Complex(cosThetaOverTwo, 0.0),
+            Complex(minusSinThetaOverTwo, 0.0),
+            Complex(sinThetaOverTwo, 0.0),
+            Complex(cosThetaOverTwo, 0.0),
+            "RY")
     }
 }
