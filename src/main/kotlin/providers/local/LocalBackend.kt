@@ -28,6 +28,9 @@ class LocalBackend : Backend{
             // it's going to throw an exception if the op.name is not in our enum
             val parsedOp:NativeOperators  = enumValueOf<NativeOperators>(op.name)
 
+            op.checkTotalQubits()
+            op.checkTotalParams()
+
             when(parsedOp){
                 NativeOperators.X -> circuitState = this.x(circuitState, op.qubits, totalQubits)
                 NativeOperators.H -> circuitState = this.h(circuitState, op.qubits, totalQubits)
@@ -46,7 +49,6 @@ class LocalBackend : Backend{
 
     private fun x(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
-        check(qubits.size == 1){ "Invalid number of Qubits for X gate!" }
 
         val selectedQubit:Int = qubits.first()
         check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for X gate!" }
@@ -113,7 +115,6 @@ class LocalBackend : Backend{
 
     private fun cnot(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
-        check(qubits.size == 2){ "Invalid number of Qubits for CNOT gate!" }
 
         val controlQubit:Int = qubits.first()
         val targetQubit:Int = qubits.last()
@@ -149,7 +150,6 @@ class LocalBackend : Backend{
 
     private fun z(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
-        check(qubits.size == 1){ "Invalid number of Qubits for Z gate!" }
 
         val selectedQubit:Int = qubits.first()
         check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for Z gate!" }
@@ -172,7 +172,6 @@ class LocalBackend : Backend{
 
     private fun cz(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
-        check(qubits.size == 2){ "Invalid number of Qubits for CZ gate!" }
 
         val controlQubit:Int = qubits.first()
         val targetQubit:Int = qubits.last()
@@ -196,7 +195,6 @@ class LocalBackend : Backend{
 
     private fun swap(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
         check(totalQubits >= 2){ "Your Circuit must have at least 2 qubits!" }
-        check(qubits.size == 2){ "Invalid number of Qubits for SWAP gate!" }
 
         val controlQubit:Int = qubits.first()
         val targetQubit:Int = qubits.last()
@@ -233,7 +231,6 @@ class LocalBackend : Backend{
         gateName:String
         ) : CircuitState{
         check(totalQubits >= 1){ "Your Circuit must have at least 1 qubit!" }
-        check(qubits.size == 1){ "Invalid number of Qubits for ${gateName} gate!" }
 
         val selectedQubit:Int = qubits.first()
         check(selectedQubit >= 0 && selectedQubit <= totalQubits-1){ "Invalid selected Qubit for ${gateName} gate!" }
@@ -382,8 +379,6 @@ class LocalBackend : Backend{
     }
 
     private fun rx(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
-        check(params.size == 1){ "Invalid number of Params for RX gate!" }
-
         val theta:Double = params.first()
         val cosThetaOverTwo:Double = cos(theta/2)
         val minusSinThetaOverTwo:Double = -1 * sin(theta/2)
@@ -402,8 +397,6 @@ class LocalBackend : Backend{
     }
 
     private fun ry(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
-        check(params.size == 1){ "Invalid number of Params for RY gate!" }
-
         val theta:Double = params.first()
         val cosThetaOverTwo:Double = cos(theta/2)
         val sinThetaOverTwo:Double = sin(theta/2)
@@ -423,8 +416,6 @@ class LocalBackend : Backend{
     }
 
     private fun rz(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int, params:ArrayList<Double>) : CircuitState{
-        check(params.size == 1){ "Invalid number of Params for RZ gate!" }
-
         val lambda:Double = params.first()
 
         if(lambda == 0.0){

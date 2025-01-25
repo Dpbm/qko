@@ -4,6 +4,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import providers.Outcome
 import providers.local.LocalBackend
+import providers.local.gates.X
+import providers.local.gates.SWAP
+import providers.local.gates.Z
+import providers.local.gates.CNOT
+import providers.local.gates.CZ
+import providers.local.gates.H
+import providers.local.gates.RX
+import providers.local.gates.RY
+import providers.local.gates.RZ
 import kotlin.math.PI
 import kotlin.math.round
 
@@ -30,7 +39,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1,2)))
+        circuit.addGate(X(arrayListOf(1,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -42,7 +51,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -54,7 +63,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -66,7 +75,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -80,8 +89,8 @@ class LocalBackendTest {
     fun testLocalBackendXGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -95,7 +104,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateTwoQubitsTo01(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -115,7 +124,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateTwoQubitsTo10(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -135,8 +144,8 @@ class LocalBackendTest {
     fun testLocalBackendXGateTwoQubitsTo11(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -156,10 +165,10 @@ class LocalBackendTest {
     fun testLocalBackendXGateTwoQubitsTo00(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(1)))
+        circuit.addGate(X(arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -179,7 +188,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateThreeQubitsTo001(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(2)))
+        circuit.addGate(X(arrayListOf(2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -198,7 +207,7 @@ class LocalBackendTest {
     fun testLocalBackendXGateThreeQubitsTo100(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(0)))
+        circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
 
@@ -218,8 +227,8 @@ class LocalBackendTest {
     fun testLocalBackendXGateThreeQubitsTo101(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(2)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(2)))
         val result:Outcome = backend.execute(circuit)
 
 
@@ -239,7 +248,7 @@ class LocalBackendTest {
     fun testLocalBackendCNOTGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CNOT", arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -251,7 +260,7 @@ class LocalBackendTest {
     fun testLocalBackendCNOTGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -263,7 +272,7 @@ class LocalBackendTest {
     fun testLocalBackendCNOTGateInvalidControlQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CNOT", arrayListOf(2,0)))
+        circuit.addGate(CNOT( arrayListOf(2,0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -275,7 +284,7 @@ class LocalBackendTest {
     fun testLocalBackendCNOTGateInvalidTargetQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CNOT", arrayListOf(0,2)))
+        circuit.addGate(CNOT( arrayListOf(0,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -287,7 +296,7 @@ class LocalBackendTest {
     fun testLocalBackendCNOTFor00State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -307,8 +316,8 @@ class LocalBackendTest {
     fun testLocalBackendCNOTFor01State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -328,8 +337,8 @@ class LocalBackendTest {
     fun testLocalBackendCNOTFor10State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -349,9 +358,9 @@ class LocalBackendTest {
     fun testLocalBackendCNOTFor11State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -371,9 +380,9 @@ class LocalBackendTest {
     fun testLocalBackendCNOTFor101State(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(2)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,2)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(2)))
+        circuit.addGate(CNOT( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[4].real, 1.0)
@@ -393,7 +402,7 @@ class LocalBackendTest {
     fun testLocalBackendZGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("Z", arrayListOf(1,2)))
+        circuit.addGate(Z( arrayListOf(1,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -405,7 +414,7 @@ class LocalBackendTest {
     fun testLocalBackendZGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("Z", arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -417,7 +426,7 @@ class LocalBackendTest {
     fun testLocalBackendZGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("Z", arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -429,7 +438,7 @@ class LocalBackendTest {
     fun testLocalBackendZGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("Z", arrayListOf(0)))
+        circuit.addGate(Z( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -443,8 +452,8 @@ class LocalBackendTest {
     fun testLocalBackendZGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("Z", arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(Z( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -458,8 +467,8 @@ class LocalBackendTest {
     fun testLocalBackendZGate01State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("Z", arrayListOf(1)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -479,7 +488,7 @@ class LocalBackendTest {
     fun testLocalBackendCZGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CZ", arrayListOf(1)))
+        circuit.addGate(CZ( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -491,7 +500,7 @@ class LocalBackendTest {
     fun testLocalBackendCZGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("CZ", arrayListOf(0,1)))
+        circuit.addGate(CZ( arrayListOf(0,1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -503,7 +512,7 @@ class LocalBackendTest {
     fun testLocalBackendCZGateInvalidControlQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CZ", arrayListOf(2,0)))
+        circuit.addGate(CZ( arrayListOf(2,0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -515,7 +524,7 @@ class LocalBackendTest {
     fun testLocalBackendCZGateInvalidTargetQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CZ", arrayListOf(0,2)))
+        circuit.addGate(CZ( arrayListOf(0,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -527,7 +536,7 @@ class LocalBackendTest {
     fun testLocalBackendCZFor00State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("CZ", arrayListOf(0,1)))
+        circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -547,8 +556,8 @@ class LocalBackendTest {
     fun testLocalBackendCZFor01State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("CZ", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -568,8 +577,8 @@ class LocalBackendTest {
     fun testLocalBackendCZFor10State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("CZ", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -589,9 +598,9 @@ class LocalBackendTest {
     fun testLocalBackendCZFor11State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("CZ", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -611,9 +620,9 @@ class LocalBackendTest {
     fun testLocalBackendCZFor101State(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(2)))
-        circuit.addGate(Gate("CZ", arrayListOf(0,2)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(2)))
+        circuit.addGate(CZ( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[5].real, -1.0)
@@ -632,7 +641,7 @@ class LocalBackendTest {
     fun testLocalBackendSWAPGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("SWAP", arrayListOf(1)))
+        circuit.addGate(SWAP( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -644,7 +653,7 @@ class LocalBackendTest {
     fun testLocalBackendSWAPGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("SWAP", arrayListOf(0,1)))
+        circuit.addGate(SWAP( arrayListOf(0,1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -656,7 +665,7 @@ class LocalBackendTest {
     fun testLocalBackendSWAPGateInvalidControlQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("SWAP", arrayListOf(2,0)))
+        circuit.addGate(SWAP( arrayListOf(2,0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -668,7 +677,7 @@ class LocalBackendTest {
     fun testLocalBackendSWAPGateInvalidTargetQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("SWAP", arrayListOf(0,2)))
+        circuit.addGate(SWAP( arrayListOf(0,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -680,7 +689,7 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor00State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("SWAP", arrayListOf(0,1)))
+        circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 1.0)
@@ -700,8 +709,8 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor01State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("SWAP", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -721,8 +730,8 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor10State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("SWAP", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -742,9 +751,9 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor11State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("SWAP", arrayListOf(0,1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -764,8 +773,8 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor100State(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("SWAP", arrayListOf(0,2)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(SWAP( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[1].real, 1.0)
@@ -785,9 +794,9 @@ class LocalBackendTest {
     fun testLocalBackendSWAPFor011State(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("X", arrayListOf(2)))
-        circuit.addGate(Gate("SWAP", arrayListOf(0,2)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(X( arrayListOf(2)))
+        circuit.addGate(SWAP( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[6].real, 1.0)
@@ -807,7 +816,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(1,2)))
+        circuit.addGate(H( arrayListOf(1,2)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -819,7 +828,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(H( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -831,7 +840,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("Z", arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(1)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -843,7 +852,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, HALF_PROB)
@@ -857,8 +866,8 @@ class LocalBackendTest {
     fun testLocalBackendHGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, HALF_PROB)
@@ -872,8 +881,8 @@ class LocalBackendTest {
     fun testLocalBackendHGate00State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         for (i in 0..<4){
@@ -886,9 +895,9 @@ class LocalBackendTest {
     fun testLocalBackendHGate01State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result[0].real*10)/10, 0.5)
@@ -908,9 +917,9 @@ class LocalBackendTest {
     fun testLocalBackendHGate10State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result[0].real*10)/10, 0.5)
@@ -930,10 +939,10 @@ class LocalBackendTest {
     fun testLocalBackendHGate11State(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result[0].real*10)/10, 0.5)
@@ -953,7 +962,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateHII(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("H", arrayListOf(0)))
+        circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -976,7 +985,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateIHI(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("H", arrayListOf(1)))
+        circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -999,7 +1008,7 @@ class LocalBackendTest {
     fun testLocalBackendHGateIIH(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("H", arrayListOf(2)))
+        circuit.addGate(H( arrayListOf(2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1022,8 +1031,8 @@ class LocalBackendTest {
     fun testLocalBackendBellStatePhiPlus(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1043,9 +1052,9 @@ class LocalBackendTest {
     fun testLocalBackendBellStatePhiMinus(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("Z", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(Z( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1065,9 +1074,9 @@ class LocalBackendTest {
     fun testLocalBackendBellStatePsiPlus(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, 0.0)
@@ -1087,10 +1096,10 @@ class LocalBackendTest {
     fun testLocalBackendBellStatePsiMinus(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("Z", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, 0.0)
@@ -1110,11 +1119,11 @@ class LocalBackendTest {
     fun testLocalBackendBellStatePsiMinus2(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("X", arrayListOf(1)))
-        circuit.addGate(Gate("Z", arrayListOf(0)))
-        circuit.addGate(Gate("Z", arrayListOf(1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(X( arrayListOf(1)))
+        circuit.addGate(Z( arrayListOf(0)))
+        circuit.addGate(Z( arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
         // if you do this circuit using a little endian pattern, the phase is going to be inserted on 10
@@ -1137,9 +1146,9 @@ class LocalBackendTest {
     fun testLocalBackendGHZState(){
         val backend = LocalBackend()
         val circuit = Circuit(3)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(0,1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(1,2)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(0,1)))
+        circuit.addGate(CNOT( arrayListOf(1,2)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1162,8 +1171,8 @@ class LocalBackendTest {
     fun testLocalBackendHCnotReverseSimpleSuperposition(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(0)))
-        circuit.addGate(Gate("CNOT", arrayListOf(1,0)))
+        circuit.addGate(H( arrayListOf(0)))
+        circuit.addGate(CNOT( arrayListOf(1,0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1183,8 +1192,8 @@ class LocalBackendTest {
     fun testLocalBackendReverseBellState(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("H", arrayListOf(1)))
-        circuit.addGate(Gate("CNOT", arrayListOf(1,0)))
+        circuit.addGate(H( arrayListOf(1)))
+        circuit.addGate(CNOT( arrayListOf(1,0)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result[0].real, HALF_PROB)
@@ -1204,7 +1213,7 @@ class LocalBackendTest {
     fun testLocalBackendRXGateInvalidNumberOfParams(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RX", arrayListOf(1,2)))
+        circuit.addGate(RX(arrayListOf(1), arrayListOf()))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1216,7 +1225,7 @@ class LocalBackendTest {
     fun testLocalBackendRXGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RX", arrayListOf(1,2), arrayListOf(0.0)))
+        circuit.addGate(RX( arrayListOf(1,2), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1228,7 +1237,7 @@ class LocalBackendTest {
     fun testLocalBackendRXGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("RX", arrayListOf(1), arrayListOf(0.0)))
+        circuit.addGate(RX( arrayListOf(1), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1240,7 +1249,7 @@ class LocalBackendTest {
     fun testLocalBackendRXGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RX", arrayListOf(1), arrayListOf(0.0)))
+        circuit.addGate(RX( arrayListOf(1), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1252,7 +1261,7 @@ class LocalBackendTest {
     fun testLocalBackendRXGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RX", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(RX( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result.first().real), 0.0)
@@ -1266,8 +1275,8 @@ class LocalBackendTest {
     fun testLocalBackendRXGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("RX", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(RX( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result.first().real), 0.0)
@@ -1281,7 +1290,7 @@ class LocalBackendTest {
     fun testLocalBackendRYGateInvalidNumberOfParams(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RY", arrayListOf(1,2)))
+        circuit.addGate(RY( arrayListOf(1), arrayListOf()))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1293,7 +1302,7 @@ class LocalBackendTest {
     fun testLocalBackendRYGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RY", arrayListOf(1,2), arrayListOf(0.0)))
+        circuit.addGate(RY( arrayListOf(1,2), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1305,7 +1314,7 @@ class LocalBackendTest {
     fun testLocalBackendRYGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("RY", arrayListOf(1), arrayListOf(0.0)))
+        circuit.addGate(RY( arrayListOf(1), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1317,7 +1326,7 @@ class LocalBackendTest {
     fun testLocalBackendRYGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RY", arrayListOf(1), arrayListOf(0.0)))
+        circuit.addGate(RY( arrayListOf(1), arrayListOf(0.0)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1329,7 +1338,7 @@ class LocalBackendTest {
     fun testLocalBackendRYGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RY", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(RY( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result.first().real), 0.0)
@@ -1343,8 +1352,8 @@ class LocalBackendTest {
     fun testLocalBackendRYGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("RY", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(RY( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result.first().real), -1.0)
@@ -1358,7 +1367,7 @@ class LocalBackendTest {
     fun testLocalBackendRZGateInvalidNumberOfParams(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RZ", arrayListOf(1,2)))
+        circuit.addGate(RZ( arrayListOf(1), arrayListOf()))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1370,7 +1379,7 @@ class LocalBackendTest {
     fun testLocalBackendRZGateInvalidNumberOfQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(2)
-        circuit.addGate(Gate("RZ", arrayListOf(1,2), arrayListOf(PI)))
+        circuit.addGate(RZ( arrayListOf(1,2), arrayListOf(PI)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1382,7 +1391,7 @@ class LocalBackendTest {
     fun testLocalBackendRZGateInvalidNumberOfCircuitQubits(){
         val backend = LocalBackend()
         val circuit = Circuit(0)
-        circuit.addGate(Gate("RZ", arrayListOf(1), arrayListOf(PI)))
+        circuit.addGate(RZ( arrayListOf(1), arrayListOf(PI)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1394,7 +1403,7 @@ class LocalBackendTest {
     fun testLocalBackendRZGateInvalidSelectedQubit(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RZ", arrayListOf(1), arrayListOf(PI)))
+        circuit.addGate(RZ( arrayListOf(1), arrayListOf(PI)))
 
         val exception = assertThrows(IllegalStateException::class.java){
             backend.execute(circuit)
@@ -1406,7 +1415,7 @@ class LocalBackendTest {
     fun testLocalBackendRZGateZeroState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("RZ", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(RZ( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(round(result.first().real), 0.0)
@@ -1420,8 +1429,8 @@ class LocalBackendTest {
     fun testLocalBackendRZGateOneState(){
         val backend = LocalBackend()
         val circuit = Circuit(1)
-        circuit.addGate(Gate("X", arrayListOf(0)))
-        circuit.addGate(Gate("RZ", arrayListOf(0), arrayListOf(PI)))
+        circuit.addGate(X( arrayListOf(0)))
+        circuit.addGate(RZ( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
         assertEquals(result.first().real, 0.0)
@@ -1441,4 +1450,5 @@ class LocalBackendTest {
     // TODO: TEST RY FOR DIFFERENT STATES
     // TODO: TEST RZ FOR DIFFERENT STATES
     // TODO: TEST CANCEL GATES (H, RX, RY, etc.)
+    // TODO: TEST QASM
 }

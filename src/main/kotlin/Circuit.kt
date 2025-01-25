@@ -15,4 +15,21 @@ class Circuit (private val totalQubits: Int){
         return this.ops
     }
 
+    fun getQasm():String{
+        var qasm:String = """
+            OPENQASM 2.0;
+            include "qelib1.inc";
+            
+            qreg q[${this.totalQubits}];
+            
+
+        """.trimIndent()
+
+        for(op in this.ops){
+            qasm += op.returnQasm() + "\n"
+        }
+
+        return qasm
+    }
+
 }

@@ -1,3 +1,9 @@
-import math.Complex
+interface Gate{
+    val name:String
+    val qubits:ArrayList<Int>
+    val params: ArrayList<Double>
 
-data class Gate(val name:String, val qubits:ArrayList<Int>, val params:ArrayList<Double> = ArrayList())
+    fun returnQasm() : String
+    fun checkTotalQubits()
+    fun checkTotalParams();
+}
