@@ -24,14 +24,14 @@ class LocalBackendTest {
 
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.size, 4);
+        assertEquals(result.state.size, 4);
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
         for(i in 1..<4){
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -78,11 +78,11 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, 1.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, 1.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -93,11 +93,11 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, 0.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, 0.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -107,17 +107,17 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -127,17 +127,17 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 1.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 1.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -148,17 +148,17 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 1.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 1.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -171,17 +171,17 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -191,15 +191,15 @@ class LocalBackendTest {
         circuit.addGate(X(arrayListOf(2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
         for(i in 2..<8){
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -211,15 +211,15 @@ class LocalBackendTest {
         val result:Outcome = backend.execute(circuit)
 
 
-        assertEquals(result[4].real, 1.0)
-        assertEquals(result[4].imaginary, 0.0)
+        assertEquals(result.state[4].real, 1.0)
+        assertEquals(result.state[4].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 4){
                 continue
             }
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -232,15 +232,15 @@ class LocalBackendTest {
         val result:Outcome = backend.execute(circuit)
 
 
-        assertEquals(result[5].real, 1.0)
-        assertEquals(result[5].imaginary, 0.0)
+        assertEquals(result.state[5].real, 1.0)
+        assertEquals(result.state[5].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 5){
                 continue
             }
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -299,17 +299,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -320,17 +320,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -341,17 +341,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 1.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 1.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -363,17 +363,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 1.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 1.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -385,15 +385,15 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[4].real, 1.0)
-        assertEquals(result[4].imaginary, 0.0)
+        assertEquals(result.state[4].real, 1.0)
+        assertEquals(result.state[4].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 4){
                 continue
             }
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
 
     }
@@ -441,11 +441,11 @@ class LocalBackendTest {
         circuit.addGate(Z( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, 0.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, 0.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -456,11 +456,11 @@ class LocalBackendTest {
         circuit.addGate(Z( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, -1.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, -1.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -471,17 +471,17 @@ class LocalBackendTest {
         circuit.addGate(Z( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, -1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, -1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test()
@@ -539,17 +539,17 @@ class LocalBackendTest {
         circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -560,17 +560,17 @@ class LocalBackendTest {
         circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -581,17 +581,17 @@ class LocalBackendTest {
         circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 1.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 1.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -603,17 +603,17 @@ class LocalBackendTest {
         circuit.addGate(CZ( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, -1.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, -1.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -625,15 +625,15 @@ class LocalBackendTest {
         circuit.addGate(CZ( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[5].real, -1.0)
-        assertEquals(result[5].imaginary, 0.0)
+        assertEquals(result.state[5].real, -1.0)
+        assertEquals(result.state[5].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 5){
                 continue;
             }
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -692,17 +692,17 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -713,17 +713,17 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 1.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 1.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -734,17 +734,17 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -756,17 +756,17 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 1.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 1.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -777,16 +777,16 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[1].real, 1.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 1.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 1){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -799,16 +799,16 @@ class LocalBackendTest {
         circuit.addGate(SWAP( arrayListOf(0,2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[6].real, 1.0)
-        assertEquals(result[6].imaginary, 0.0)
+        assertEquals(result.state[6].real, 1.0)
+        assertEquals(result.state[6].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 6){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -855,11 +855,11 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, HALF_PROB)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, HALF_PROB)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, HALF_PROB)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, HALF_PROB)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -870,11 +870,11 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, HALF_PROB)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, HALF_PROB)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(result.last().real, -HALF_PROB)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(result.state.last().real, -HALF_PROB)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -886,8 +886,8 @@ class LocalBackendTest {
         val result:Outcome = backend.execute(circuit)
 
         for (i in 0..<4){
-            assertEquals(round(result[i].real*10)/10, 0.5)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(round(result.state[i].real*10)/10, 0.5)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -900,17 +900,17 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result[0].real*10)/10, 0.5)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(round(result.state[0].real*10)/10, 0.5)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(round(result[1].real*10)/10, -0.5)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(round(result.state[1].real*10)/10, -0.5)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(round(result[2].real*10)/10, 0.5)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(round(result.state[2].real*10)/10, 0.5)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(round(result[3].real*10)/10, -0.5)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(round(result.state[3].real*10)/10, -0.5)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -922,17 +922,17 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result[0].real*10)/10, 0.5)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(round(result.state[0].real*10)/10, 0.5)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(round(result[1].real*10)/10, 0.5)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(round(result.state[1].real*10)/10, 0.5)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(round(result[2].real*10)/10, -0.5)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(round(result.state[2].real*10)/10, -0.5)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(round(result[3].real*10)/10, -0.5)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(round(result.state[3].real*10)/10, -0.5)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -945,17 +945,17 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result[0].real*10)/10, 0.5)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(round(result.state[0].real*10)/10, 0.5)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(round(result[1].real*10)/10, -0.5)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(round(result.state[1].real*10)/10, -0.5)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(round(result[2].real*10)/10, -0.5)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(round(result.state[2].real*10)/10, -0.5)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(round(result[3].real*10)/10, 0.5)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(round(result.state[3].real*10)/10, 0.5)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -965,19 +965,19 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[4].real, HALF_PROB)
-        assertEquals(result[4].imaginary, 0.0)
+        assertEquals(result.state[4].real, HALF_PROB)
+        assertEquals(result.state[4].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 0 || i == 4){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -988,19 +988,19 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[2].real, HALF_PROB)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, HALF_PROB)
+        assertEquals(result.state[2].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 0 || i == 2){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -1011,19 +1011,19 @@ class LocalBackendTest {
         circuit.addGate(H( arrayListOf(2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, HALF_PROB)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, HALF_PROB)
+        assertEquals(result.state[1].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 0 || i == 1){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -1035,17 +1035,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, HALF_PROB)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, HALF_PROB)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1057,17 +1057,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, -HALF_PROB)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, -HALF_PROB)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1079,17 +1079,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, 0.0)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, 0.0)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, HALF_PROB)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, HALF_PROB)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, HALF_PROB)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, HALF_PROB)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1102,17 +1102,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(0,1)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, 0.0)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, 0.0)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, HALF_PROB)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, HALF_PROB)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, -HALF_PROB)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, -HALF_PROB)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1129,17 +1129,17 @@ class LocalBackendTest {
         // if you do this circuit using a little endian pattern, the phase is going to be inserted on 10
         // however, once our first qubit is the left-most, this will be the reverse
 
-        assertEquals(result[0].real, 0.0)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, 0.0)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, -HALF_PROB)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, -HALF_PROB)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, HALF_PROB)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, HALF_PROB)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1151,19 +1151,19 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(1,2)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[7].real, HALF_PROB)
-        assertEquals(result[7].imaginary, 0.0)
+        assertEquals(result.state[7].real, HALF_PROB)
+        assertEquals(result.state[7].imaginary, 0.0)
 
         for(i in 0..<8){
             if(i == 0 || i == 7){
                 continue
             }
 
-            assertEquals(result[i].real, 0.0)
-            assertEquals(result[i].imaginary, 0.0)
+            assertEquals(result.state[i].real, 0.0)
+            assertEquals(result.state[i].imaginary, 0.0)
         }
     }
 
@@ -1175,17 +1175,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(1,0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, HALF_PROB)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, HALF_PROB)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, 0.0)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, 0.0)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test
@@ -1196,17 +1196,17 @@ class LocalBackendTest {
         circuit.addGate(CNOT( arrayListOf(1,0)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result[0].real, HALF_PROB)
-        assertEquals(result[0].imaginary, 0.0)
+        assertEquals(result.state[0].real, HALF_PROB)
+        assertEquals(result.state[0].imaginary, 0.0)
 
-        assertEquals(result[1].real, 0.0)
-        assertEquals(result[1].imaginary, 0.0)
+        assertEquals(result.state[1].real, 0.0)
+        assertEquals(result.state[1].imaginary, 0.0)
 
-        assertEquals(result[2].real, 0.0)
-        assertEquals(result[2].imaginary, 0.0)
+        assertEquals(result.state[2].real, 0.0)
+        assertEquals(result.state[2].imaginary, 0.0)
 
-        assertEquals(result[3].real, HALF_PROB)
-        assertEquals(result[3].imaginary, 0.0)
+        assertEquals(result.state[3].real, HALF_PROB)
+        assertEquals(result.state[3].imaginary, 0.0)
     }
 
     @Test()
@@ -1264,11 +1264,11 @@ class LocalBackendTest {
         circuit.addGate(RX( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result.first().real), 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(round(result.state.first().real), 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(round(result.last().real), 0.0)
-        assertEquals(result.last().imaginary, -1.0)
+        assertEquals(round(result.state.last().real), 0.0)
+        assertEquals(result.state.last().imaginary, -1.0)
     }
 
     @Test
@@ -1279,11 +1279,11 @@ class LocalBackendTest {
         circuit.addGate(RX( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result.first().real), 0.0)
-        assertEquals(result.first().imaginary, -1.0)
+        assertEquals(round(result.state.first().real), 0.0)
+        assertEquals(result.state.first().imaginary, -1.0)
 
-        assertEquals(round(result.last().real), 0.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(round(result.state.last().real), 0.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test()
@@ -1341,11 +1341,11 @@ class LocalBackendTest {
         circuit.addGate(RY( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result.first().real), 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(round(result.state.first().real), 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(round(result.last().real), 1.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(round(result.state.last().real), 1.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -1356,11 +1356,11 @@ class LocalBackendTest {
         circuit.addGate(RY( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result.first().real), -1.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(round(result.state.first().real), -1.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(round(result.last().real), 0.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(round(result.state.last().real), 0.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test()
@@ -1418,11 +1418,11 @@ class LocalBackendTest {
         circuit.addGate(RZ( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(round(result.first().real), 0.0)
-        assertEquals(result.first().imaginary, -1.0)
+        assertEquals(round(result.state.first().real), 0.0)
+        assertEquals(result.state.first().imaginary, -1.0)
 
-        assertEquals(round(result.last().real), 0.0)
-        assertEquals(result.last().imaginary, 0.0)
+        assertEquals(round(result.state.last().real), 0.0)
+        assertEquals(result.state.last().imaginary, 0.0)
     }
 
     @Test
@@ -1433,11 +1433,11 @@ class LocalBackendTest {
         circuit.addGate(RZ( arrayListOf(0), arrayListOf(PI)))
         val result:Outcome = backend.execute(circuit)
 
-        assertEquals(result.first().real, 0.0)
-        assertEquals(result.first().imaginary, 0.0)
+        assertEquals(result.state.first().real, 0.0)
+        assertEquals(result.state.first().imaginary, 0.0)
 
-        assertEquals(round(result.last().real), 0.0)
-        assertEquals(result.last().imaginary, 1.0)
+        assertEquals(round(result.state.last().real), 0.0)
+        assertEquals(result.state.last().imaginary, 1.0)
     }
 
     // TODO: TEST PHASEKICKBACK
@@ -1451,4 +1451,5 @@ class LocalBackendTest {
     // TODO: TEST RZ FOR DIFFERENT STATES
     // TODO: TEST CANCEL GATES (H, RX, RY, etc.)
     // TODO: TEST QASM
+    // TODO: TEST TO DIST
 }

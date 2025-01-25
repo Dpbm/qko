@@ -7,13 +7,14 @@ import math.Complex
 import math.HALF_PROB
 import math.notMinusZero
 import providers.Backend
+import providers.Outcome
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 
 class LocalBackend : Backend{
 
-    override fun execute(circuit: Circuit) : CircuitState {
+    override fun execute(circuit: Circuit) : Outcome {
 
         val totalQubits:Int = circuit.getTotalQubits()
 
@@ -44,7 +45,7 @@ class LocalBackend : Backend{
             }
         }
 
-        return circuitState
+        return Outcome(circuitState)
     }
 
     private fun x(circuitState:CircuitState, qubits:ArrayList<Int>, totalQubits:Int) : CircuitState{
