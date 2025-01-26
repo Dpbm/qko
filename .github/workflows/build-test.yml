@@ -1,0 +1,34 @@
+name: Build and Test QKO
+
+on:
+    push:
+        branches:
+            - 'staging'
+
+jobs:
+    build_and_test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout sources
+              uses: actions/checkout@v4
+
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: 21
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v3
+
+            - name: Build
+              run: ./gradlew build
+
+            - name: Test
+              run: ./gradlew test
+
+            - name: Push to Production
+              run: |
+                  git config --global user.email "dpbm136@gmail.com"
+                  git config --global user.name "Push Bot"
+                  git push origin production
