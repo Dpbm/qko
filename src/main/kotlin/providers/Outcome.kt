@@ -2,9 +2,9 @@ package providers
 
 import CircuitState
 import kotlin.math.pow
+import Dist
 
-typealias Prob = Double
-typealias Dist = Array<Prob>
+
 
 class Outcome (val state:CircuitState) {
 
