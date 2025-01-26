@@ -1,9 +1,6 @@
 name: Build and Test QKO
 
-on:
-    push:
-        branches:
-            - 'staging'
+on: push
 
 jobs:
     build_and_test:
@@ -26,9 +23,3 @@ jobs:
 
             - name: Test
               run: ./gradlew test
-
-            - name: Push to Production
-              run: |
-                  git config --global user.email "dpbm136@gmail.com"
-                  git config --global user.name "Push Bot"
-                  git push origin production
