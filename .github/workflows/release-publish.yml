@@ -34,6 +34,8 @@ jobs:
             - name: setup key
               run: |
                   sudo apt-get update && sudo apt-get install -y gnupg
+                  gpgconf --kill gpg-agent || true
+                  gpgconf --launch gpg-agent
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
                   gpg --batch --export-secret-keys --output ~/.gnupg/secring.gpg
 
