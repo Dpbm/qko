@@ -10,6 +10,3 @@ jobs:
             GPG_KEY: ${{ secrets.GPG_KEY }}
             GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
             GPG_KEYID: ${{ secrets.GPG_KEYID }}
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            actor: ${{ github.actor }}
