@@ -33,9 +33,9 @@ jobs:
 
             - name: setup key
               run: |
+                  sudo apt-get update && sudo apt-get install -y gnupg
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
-                  export GPG_TTY=$(tty)
-                  gpg --keyring secring.gpg --export-secret-keys > ~/.gnupg/secring.gpg
+                  gpg --batch --export-secret-keys --output ~/.gnupg/secring.gpg
 
             - uses: gradle/actions/setup-gradle@v3
 
