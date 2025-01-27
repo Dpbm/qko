@@ -22,6 +22,9 @@ jobs:
               run: |
                   chmod +x ./ci-utils/setup-gpg.sh
                   ./ci-utils/setup-gpg.sh
+              env:
+                  GPG_KEY: ${{ secrets.GPG_KEY }}
+                  GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
 
             - uses: gradle/actions/setup-gradle@v3
 
