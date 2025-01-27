@@ -34,6 +34,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             artifactId = "qko"
+            
             from(components["java"])
 
             versionMapping {
@@ -93,20 +94,11 @@ publishing {
             }
         }*/
     }
-
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-        }
-    }
 }
 
 
 signing {
-    val signingKeyId: String? by project
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    useGpgCmd()
     sign(publishing.publications["mavenJava"])
 }
 
