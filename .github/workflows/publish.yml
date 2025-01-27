@@ -1,6 +1,13 @@
 name: (Reusable Workflow) Publish packages
 on:
     workflow_call:
+        secrets:
+            GPG_KEY:
+                description: 'Your private GPG KEY'
+                required: true
+            GPG_PASSWORD:
+                description: 'Your GPG KEY passphrase'
+                required: true
 
 jobs:
     publish_github:
