@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version "2.0.21"
     `java-library`
     `maven-publish`
-    signing
 }
 
 group = "org.quantum"
@@ -94,12 +93,6 @@ publishing {
             }
         }*/
     }
-}
-
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications["mavenJava"])
 }
 
 
