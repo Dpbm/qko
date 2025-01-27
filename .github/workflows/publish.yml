@@ -8,6 +8,9 @@ on:
             GPG_PASSWORD:
                 description: 'Your GPG KEY passphrase'
                 required: true
+            GPG_KEYID:
+                description: 'Your GPG KEY last 8 digits'
+                required: true
 
 jobs:
     publish_github:
