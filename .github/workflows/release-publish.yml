@@ -34,6 +34,10 @@ jobs:
             - name: setup key
               run: |
                   sudo apt-get update && sudo apt-get install -y gnupg
+                  mkdir -p ~/.gnupg
+                  chmod 700 ~/.gnupg
+                  if [ ! -f ~/.gnupg/gpg.conf ]; then touch ~/.gnupg/gpg.conf; fi
+                  if [ ! -f ~/.gnupg/gpg-agent.conf ]; then touch ~/.gnupg/gpg-agent.conf; fi
                   echo "use-agent" >> ~/.gnupg/gpg.conf
                   echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
                   echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
