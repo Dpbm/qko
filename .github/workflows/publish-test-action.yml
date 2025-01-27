@@ -20,23 +20,10 @@ jobs:
 
             - name: setup key
               run: |
-                  echo "----setup GPG----"
-                  sudo apt-get update && sudo apt-get install -y gnupg
-                  mkdir -p ~/.gnupg
-                  chmod 700 ~/.gnupg
-                  if [ ! -f ~/.gnupg/gpg.conf ]; then touch ~/.gnupg/gpg.conf; fi
-                  if [ ! -f ~/.gnupg/gpg-agent.conf ]; then touch ~/.gnupg/gpg-agent.conf; fi
-                  echo "use-agent" >> ~/.gnupg/gpg.conf
-                  echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-                  echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-                  echo "----reload Agent----"
-                  echo RELOADAGENT | gpg-connect-agent
-                  echo "----import key----"
-                  cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
-                  echo "----export key to path----"
-                  gpg --batch --pinentry-mode=loopback --yes --passphrase "${{ secrets.GPG_PASSWORD }}" --export-secret-keys --output ~/.gnupg/secring.gpg
+                  chmod +x ./ci-utils/setup-gpg.sh
+                  ./ci-utils/setup-gpg.sh
 
             - uses: gradle/actions/setup-gradle@v3
 
             - name: Setup Gradle Signing
-              run: gradle sign -Psigning.secretKeyRingFile=~/.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
+              run: gradle sign -Psigning.secretKeyRingFile=../../../.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
