@@ -39,15 +39,12 @@ jobs:
 
             - uses: gradle/actions/setup-gradle@v3
 
-            # check out: https://docs.gradle.org/current/userguide/signing_plugin.html
-            - name: Setup Gradle Signing
-              run: gradle sign -Psigning.secretKeyRingFile=../../../.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
-
             - name: Publish
               if: ${{ inputs.env == 'production' }}
               run: ./gradlew publish
               env:
-                  GPG_KEY: ${{ secrets.GPG_KEY }}
-                  GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+                  ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
+                  ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSWORD }}
+                  ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GPG_KEYID }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GITHUB_ACTOR: ${{ github.actor }}
