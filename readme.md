@@ -2,7 +2,7 @@
 ## A quantum library for Kotlin
 
 ![build and test workflow](https://github.com/Dpbm/qko/actions/workflows/build-test.yml/badge.svg)
-![publish workflow](https://github.com/Dpbm/qko/actions/workflows/release-publish.yml/badge.svg)
+![release and publish workflow](https://github.com/Dpbm/qko/actions/workflows/release-publish.yml/badge.svg)
 
 Qko is an open source library for creating quantum circuits and executing them easily.
 
