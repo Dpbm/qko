@@ -6,6 +6,11 @@ on:
                 required: true
                 type: string
                 description: 'Set as production to publish your artifacts'
+                default: 'test'
+            actor:
+                required: true
+                type: string
+                description: 'Your github username'
         secrets:
             GPG_KEY:
                 description: 'Your private GPG KEY'
@@ -15,6 +20,9 @@ on:
                 required: true
             GPG_KEYID:
                 description: 'Your GPG KEY last 8 digits'
+                required: true
+            GITHUB_TOKEN:
+                description: 'Your github access token'
                 required: true
 
 jobs:
@@ -46,3 +54,6 @@ jobs:
             - name: Publish
               if: ${{ inputs.env == 'production' }}
               run: ./gradlew publish
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_ACTOR: ${{ inputs.actor }}
