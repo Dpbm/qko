@@ -34,7 +34,8 @@ jobs:
             - name: setup key
               run: |
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
-                  DISPLAY=":1" GPG_TTY="" gpg --batch --no-tty --keyring secring.gpg --export-secret-keys > ~/.gnupg/secring.gpg
+                  export GPG_TTY=$(tty)
+                  gpg --keyring secring.gpg --export-secret-keys > ~/.gnupg/secring.gpg
 
             - uses: gradle/actions/setup-gradle@v3
 
