@@ -1,6 +1,11 @@
 name: (Reusable Workflow) Publish packages
 on:
     workflow_call:
+        inputs:
+            env:
+                required: true
+                type: string
+                description: 'Set as production to publish your artifacts'
         secrets:
             GPG_KEY:
                 description: 'Your private GPG KEY'
@@ -37,3 +42,7 @@ jobs:
             # check out: https://docs.gradle.org/current/userguide/signing_plugin.html
             - name: Setup Gradle Signing
               run: gradle sign -Psigning.secretKeyRingFile=../../../.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
+
+            - name: Publish
+              if: ${{ inputs.env == 'production' }}
+              run: ./gradlew publish
