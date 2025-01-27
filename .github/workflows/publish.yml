@@ -3,14 +3,9 @@ on:
     workflow_call:
         inputs:
             env:
-                required: true
                 type: string
                 description: 'Set as production to publish your artifacts'
                 default: 'test'
-            actor:
-                required: true
-                type: string
-                description: 'Your github username'
         secrets:
             GPG_KEY:
                 description: 'Your private GPG KEY'
@@ -53,4 +48,4 @@ jobs:
               run: ./gradlew publish
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  GITHUB_ACTOR: ${{ inputs.actor }}
+                  GITHUB_ACTOR: ${{ github.actor }}
