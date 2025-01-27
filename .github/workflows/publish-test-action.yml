@@ -34,7 +34,7 @@ jobs:
                   echo "----import key----"
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
                   echo "----export key to path----"
-                  gpg --batch --yes --export-secret-keys --output ~/.gnupg/secring.gpg
+                  gpg --keyring secring.gpg --export-secret-keys > ~/.gnupg/secring.gpg
 
             - uses: gradle/actions/setup-gradle@v3
 
