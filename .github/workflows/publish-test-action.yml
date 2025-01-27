@@ -20,6 +20,7 @@ jobs:
 
             - name: setup key
               run: |
+                  echo "----setup GPG----"
                   sudo apt-get update && sudo apt-get install -y gnupg
                   mkdir -p ~/.gnupg
                   chmod 700 ~/.gnupg
@@ -28,8 +29,11 @@ jobs:
                   echo "use-agent" >> ~/.gnupg/gpg.conf
                   echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
                   echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+                  echo "----reload Agent----"
                   echo RELOADAGENT | gpg-connect-agent
+                  echo "----import key----"
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
+                  echo "----export key to path----"
                   gpg --batch --yes --export-secret-keys --output ~/.gnupg/secring.gpg
 
             - uses: gradle/actions/setup-gradle@v3
