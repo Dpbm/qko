@@ -34,8 +34,10 @@ jobs:
             - name: setup key
               run: |
                   sudo apt-get update && sudo apt-get install -y gnupg
-                  gpgconf --kill gpg-agent || true
-                  gpgconf --launch gpg-agent
+                  echo "use-agent" >> ~/.gnupg/gpg.conf
+                  echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+                  echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+                  echo RELOADAGENT | gpg-connect-agent
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
                   gpg --batch --export-secret-keys --output ~/.gnupg/secring.gpg
 
