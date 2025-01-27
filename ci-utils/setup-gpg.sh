@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# references:
+# https://stackoverflow.com/questions/70534089/is-it-possible-to-export-a-gpg-private-key-without-passphrase-being-provided-in
+# https://gist.github.com/Dpbm/d5c2bf041589e01a409c701a17cef71e
+# https://gist.github.com/sualeh/ae78dc16123899d7942bc38baba5203c
+
 set -e
 
 RESET_COLOR='\033[0m'

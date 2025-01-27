@@ -24,5 +24,6 @@ jobs:
 
             - uses: gradle/actions/setup-gradle@v3
 
+            # check out: https://docs.gradle.org/current/userguide/signing_plugin.html
             - name: Setup Gradle Signing
               run: gradle sign -Psigning.secretKeyRingFile=../../../.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}

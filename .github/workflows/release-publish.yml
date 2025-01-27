@@ -5,7 +5,7 @@ on:
             - '*'
 jobs:
     release:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         permissions:
             contents: write
 
@@ -15,43 +15,9 @@ jobs:
             - name: create release
               uses: ncipollo/release-action@v1
 
-    publish_github:
+    publish:
         needs: release
-
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
-
-        steps:
-            - uses: actions/checkout@v4
-
-            - uses: actions/setup-java@v4
-              with:
-                  java-version: '21'
-                  distribution: 'temurin'
-
-            - name: setup key
-              run: |
-                  sudo apt-get update && sudo apt-get install -y gnupg
-                  mkdir -p ~/.gnupg
-                  chmod 700 ~/.gnupg
-                  if [ ! -f ~/.gnupg/gpg.conf ]; then touch ~/.gnupg/gpg.conf; fi
-                  if [ ! -f ~/.gnupg/gpg-agent.conf ]; then touch ~/.gnupg/gpg-agent.conf; fi
-                  echo "use-agent" >> ~/.gnupg/gpg.conf
-                  echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-                  echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-                  echo RELOADAGENT | gpg-connect-agent
-                  cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
-                  gpg --no-tty --export-secret-keys --output ~/.gnupg/secring.gpg
-
-            - uses: gradle/actions/setup-gradle@v3
-
-            - name: Setup Gradle Signing
-              run: gradle sign -Psigning.secretKeyRingFile=~/.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
-
-            - name: Publish package
-              run: ./gradlew publish
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  GITHUB_ACTOR: ${{ github.actor }}
+        uses: ./.github/workflows/publish.yml
+        secrets:
+            GPG_KEY: ${{ secrets.GPG_KEY }}
+            GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
