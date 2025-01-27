@@ -101,9 +101,14 @@ publishing {
     }
 }
 
+
 signing {
-    sign(publishing.publications["mavenJava"])
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(tasks["stuffZip"])
 }
+
 
 tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
