@@ -21,9 +21,6 @@ on:
             GPG_KEYID:
                 description: 'Your GPG KEY last 8 digits'
                 required: true
-            GITHUB_TOKEN:
-                description: 'Your github access token'
-                required: true
 
 jobs:
     publish_github:
