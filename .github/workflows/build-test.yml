@@ -5,10 +5,12 @@ on:
         branches:
             - '*'
 
+# use anchors when supported
+
 jobs:
-    setup:
+    build:
         runs-on: ubuntu-latest
-        steps: &setup-steps
+        steps:
             - name: Checkout sources
               uses: actions/checkout@v4
 
@@ -21,13 +23,6 @@ jobs:
             - name: Setup Gradle
               uses: gradle/actions/setup-gradle@v3
 
-    build:
-        runs-on: ubuntu-latest
-        needs: setup
-
-        steps:
-            - *setup-steps
-
             - name: Build
               run: ./gradlew build
 
@@ -36,7 +31,17 @@ jobs:
         needs: build
 
         steps:
-            - *setup-steps
+            - name: Checkout sources
+              uses: actions/checkout@v4
+
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: 21
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v3
 
             - name: Test
               run: ./gradlew test
