@@ -43,7 +43,7 @@ jobs:
                   echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
                   echo RELOADAGENT | gpg-connect-agent
                   cat <(echo -e "${{ secrets.GPG_KEY }}") | gpg --batch --import
-                  gpg --batch --export-secret-keys --output ~/.gnupg/secring.gpg
+                  gpg --export-secret-keys --output ~/.gnupg/secring.gpg
 
             - uses: gradle/actions/setup-gradle@v3
 
