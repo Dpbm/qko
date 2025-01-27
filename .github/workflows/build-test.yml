@@ -2,7 +2,7 @@ name: Build and Test QKO
 
 on:
     push:
-        tags:
+        branches:
             - '*'
 
 jobs:
@@ -29,6 +29,3 @@ jobs:
 
             - name: Test
               run: ./gradlew test
-
-            - name: create release
-              uses: ncipollo/release-action@v1
