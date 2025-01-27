@@ -1,23 +1,10 @@
-name: Release and Publish packages
+name: (Test) Publish packages Setup
 on:
     push:
-        tags:
-            - '*'
+        branches:
+            - 'test-actions'
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-
-        steps:
-            - uses: actions/checkout@v3
-
-            - name: create release
-              uses: ncipollo/release-action@v1
-
     publish_github:
-        needs: release
-
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -49,9 +36,3 @@ jobs:
 
             - name: Setup Gradle Signing
               run: gradle sign -Psigning.secretKeyRingFile=~/.gnupg/secring.gpg -Psigning.password=${{ secrets.GPG_PASSWORD }} -Psigning.keyId=${{ secrets.GPG_KEYID }}
-
-            - name: Publish package
-              run: ./gradlew publish
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  GITHUB_ACTOR: ${{ github.actor }}
