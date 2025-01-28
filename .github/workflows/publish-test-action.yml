@@ -1,0 +1,12 @@
+name: (Test) Publish packages Setup
+on:
+    push:
+        branches:
+            - 'test-actions'
+jobs:
+    publish:
+        uses: ./.github/workflows/publish.yml
+        secrets:
+            GPG_KEY: ${{ secrets.GPG_KEY }}
+            GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+            GPG_KEYID: ${{ secrets.GPG_KEYID }}

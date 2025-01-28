@@ -2,13 +2,14 @@ plugins {
     kotlin("jvm") version "2.0.21"
     `java-library`
     `maven-publish`
+    `signing`
 }
 
-group = "org.quantum"
+group = "io.github.dpbm"
 version = "1.0"
 
 repositories {
-    mavenCentral()
+    mavenCentral()  
 }
 
 java {
@@ -84,15 +85,20 @@ publishing {
             }
         }
 
-        /*maven{
+        maven{
             name = "OSSRH"
             url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
                 username = System.getenv("OSSRH_USERNAME")
                 password = System.getenv("OSSRH_PASSWORD")
             }
-        }*/
+        }
     }
+}
+
+signing{
+    useInMemoryPgpKeys(System.getenv("GPG_KEY"), System.getenv("GPG_KEY_PASSWORD"))
+    sign(publishing.publications["mavenJava"])
 }
 
 
