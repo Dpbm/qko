@@ -60,4 +60,4 @@ fun main(){
 }
 ```
 
-In this framework we've chosen to follow the big-endian pattern, so the less significant qubit is the first from the left to the right ($q_{0}q_{1}q_{3}\ldots q_{n-1}$), so applying $X(q_{0})$ changes $00$ to $10$.
+In this framework, we've chosen to follow the big-endian pattern, so the less significant qubit is the first from the left to the right ($q_{0}q_{1}q_{3}\ldots q_{n-1}$). This choice implies on the final bitstrings sequence, for example, applying $X(q_{0})$ changes $00$ to $10$ instead of $01$. For some people, it may seem as a problem, but in practice it's easy to remap to little-endian just flipping the sequence and its easier to think during the gates implementation. Also, in the near future, a method will be added to apply the remapping with ease.
