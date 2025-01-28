@@ -9,7 +9,30 @@ Qko is an open source library for creating quantum circuits and executing them e
 
 Its usage is inspired by `Qiskit` and `Cirq`. So creating your own circuit must be easy as using one of the mainstream frameworks.
 
-To Create a Bell State for example just run:
+## Install
+
+First of all, create a new `Gradle + Kotlin` project.
+
+```bash
+mkdir new_project
+cd new_project
+gradle init
+```
+
+Then add to your `build.gradle.kts`:
+
+```kotlin
+dependencies {
+    implementation("io.github.dpbm:qko:1.0")
+}
+
+```
+
+After that you're free to start creating your circuits.
+
+## Create circuits
+
+For instance, to Create a Bell State, just run:
 
 ```kotlin
 package examples
@@ -22,17 +45,19 @@ import providers.local.gates.CNOT
 
 fun main(){
     val circuit = Circuit(2) //circuit with 2 qubits
-    circuit.addGate(H(arrayListOf(0)))
-    circuit.addGate(CNOT(arrayListOf(0,1)))
+    circuit.addGate(H(arrayListOf(0))) // add an H gate on qubit 0 
+    circuit.addGate(CNOT(arrayListOf(0,1))) // add a CNOT between qubits 1 and 0
 
     val backend = LocalBackend()
-    val result:Outcome = backend.execute(circuit)
+    val result:Outcome = backend.execute(circuit) // execute the job
 
     println("---OUTPUT---")
 
-    for((index,prob) in result.toDist().withIndex()){
+    for((index,prob) in result.toDist().withIndex()){ // map through your probabilities distribution
         val binaryRep = index.toString(radix = 2).padStart(2, '0')
         println("$binaryRep $prob")
     }
 }
 ```
+
+In this framework we've chosen to follow the big-endian pattern, so the less significant qubit is the first from the left to the right ($q_{0}q_{1}q_{3}\ldots q_{n-1}$), so applying $X(q_{0})$ changes $00$ to $10$.
