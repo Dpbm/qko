@@ -22,13 +22,14 @@ on:
             OSSRH_PASSWORD:
                 description: 'Your Maven Central Key password'
                 required: true
-env:
-    GPG_DIR: ~/.gnupg
-    GPG_SECRING_FILE_PATH: $GPG_DIR/secring.gpg
 
 jobs:
     publish:
         runs-on: ubuntu-24.04
+
+        env:
+            GPG_DIR: ~/.gnupg
+            GPG_SECRING_FILE_PATH: ~/.gnupg/secring.gpg
 
         steps:
             - uses: actions/checkout@v4
